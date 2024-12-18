@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<GUI onOpen="onOpen" onClose="onClose" onCreate="onCreate">
+    <Bitmap profile="dialogFullscreenBg" id="dialogBg" />
+    <GuiElement profile="fs25_dialogBg" id="dialogElement" size="1350px 800px">        
+        <ThreePartBitmap profile="fs25_dialogBgMiddle" />
+        <ThreePartBitmap profile="fs25_dialogBgTop" />
+        <ThreePartBitmap profile="fs25_dialogBgBottom" />
+        <GuiElement profile="fs25_dialogContentContainer">
+            <Text profile="dialogTitle" text="$l10n_ui_AvaliableTypesDlg_title" id="dialogTitleElement" position="0px -30px" />
+    
+            <!-- Main list -->
+            <Bitmap profile="ingameMenuMyList" id="tableHeaderBox" position="50px -90px" size="1230px 50px">
+                <Text profile="ingameMenuMyHeaderLeft" position="20px -0px" size="350px 40.77px" text="$l10n_ui_AvaliableTypesDlg_title_title"/>
+                <Text profile="ingameMenuMyHeaderRight" position="380px -0px" size="100px 40.77px" text="$l10n_ui_AvaliableTypesDlg_title_minOrderLevel"/>
+                <Text profile="ingameMenuMyHeaderRight" position="490px -0px" size="130px 40.77px" text="$l10n_ui_AvaliableTypesDlg_title_probability"/>
+                <Text profile="ingameMenuMyHeaderRight" position="640px -0px" size="150px 40.77px" text="$l10n_ui_AvaliableTypesDlg_title_quantityCorrectionFactor"/>
+                <Text profile="ingameMenuMyHeaderLeft" position="810px -0px" size="580px 40.77px" text="$l10n_ui_AvaliableTypesDlg_title_msg"/>
+                <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px 2px" />
+            </Bitmap>
+
+            <SmoothList profile="ingameMenuMyList" id="typesTable" focusInit="onOpen" focusChangeTop="nil" focusChangeBottom="nil" position="50px -145px" size="1230px 550px" listSectionHeader="sectionTypes" >
+                <ListItem profile="ingameMenuMyListItem"  name="orderRowTemplate" size="1230px 40.77px">
+                    <Bitmap profile="ingameMenuMyRowCellImage" name="ftIcon" />
+                    <Text profile="ingameMenuMyRowCellLeft" position="40px 0px" size="350px 40.77px" name="ftTitle"/>
+                    <Text profile="ingameMenuMyRowCellRight" position="380px 0px" size="100px 40.77px" name="minOrderLevel" textAlignment="right"/>
+                    <Text profile="ingameMenuMyRowCellRight" position="490px 0px" size="130px 40.77px" name="probability" textAlignment="right"/>
+                    <Text profile="ingameMenuMyRowCellRight" position="640px 0px" size="150px 40.77px" name="quantityCorrectionFactor" textAlignment="right"/>
+                    <Text profile="ingameMenuMyRowCellLeft" position="810px 0px" size="400px 40.77px" name="msg" textSize="14px" textMaxNumLines="2" textLayoutMode="scrolling"/>
+                </ListItem>
+
+                <ListItem profile="ingameMenuMyListItem" name="sectionTypes" imageColor="0 0 0 0.35">
+                    <Text profile="ingameMenuMyRowSectionLeft" name="title" textSize="18px" size="355px 40.77px"/>
+                </ListItem>
+            </SmoothList>
+
+            <ThreePartBitmap profile="fs25_listSliderBox" position="-30px -55px" size="12px 550px" with="anchorTopRight">
+                <Slider profile="fs25_listSlider" size="6px 542px" dataElementId="typesTable" id="tableSlider" />
+            </ThreePartBitmap>  
+        </GuiElement>
+
+        <!-- Buttons -->
+        <BoxLayout profile="fs25_dialogButtonBox" size="1250px 60px">
+            <Button profile="buttonBack" text="$l10n_ui_orderDlg_btnClose" onClick="onClickClose" />
+        </BoxLayout>
+    </GuiElement>
+</GUI>
