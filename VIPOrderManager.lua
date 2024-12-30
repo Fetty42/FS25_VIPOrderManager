@@ -63,7 +63,8 @@ VIPOrderManager.existingAnimalHusbandryOutputs 	= {}	-- 1 --> existing | 2 --> s
 VIPOrderManager.VIPOrders 			= {}	-- List of orders {level, entries{[Name] = {fillTypeName, title, quantity, fillLevel, payout, targetStation, isAnimal, neededAgeInMonths}}}
 
 VIPOrderManager.outputLines 		= {}	-- Output lines for the draw() function (text, size, bold, colorId, x, y)
-VIPOrderManager.infoHud 			= nil	-- VID Order Info HUD
+VIPOrderManager.infoOverlayBackground = g_currentModDirectory.."OverlayBackground.dds"
+VIPOrderManager.infoOverlay			= nil	-- Overlay for the info display
 VIPOrderManager.OrderDlg			= nil
 
 VIPOrderManager.successSound = createSample("success")
@@ -75,7 +76,6 @@ loadSample(VIPOrderManager.failSound, "data/sounds/ui/uiFail.ogg", false)
 
 source(Utils.getFilename("MyTools.lua", VIPOrderManager.dir))
 source(Utils.getFilename("VIPOrderManagerDefaults.lua", VIPOrderManager.dir))
-source(Utils.getFilename("InfoHUD.lua", VIPOrderManager.dir))
 source(VIPOrderManager.dir .. "gui/OrderFrame.lua")
 
 function VIPOrderManager:loadMap(name)
@@ -93,9 +93,6 @@ function VIPOrderManager:loadMap(name)
 	
 	
 	if g_currentMission:getIsClient() then
-		-- Player.registerActionEvents = Utils.appendedFunction(Player.registerActionEvents, VIPOrderManager.registerActionEvents);
-		-- Enterable.onRegisterActionEvents = Utils.appendedFunction(Enterable.onRegisterActionEvents, VIPOrderManager.registerActionEvents);
-		-- VIPOrderManager.eventName = {};
 
 		FSBaseMission.saveSavegame = Utils.appendedFunction(FSBaseMission.saveSavegame, VIPOrderManager.saveSettings);
 		FSBaseMission.onFinishedLoading = Utils.appendedFunction(FSBaseMission.onFinishedLoading, VIPOrderManager.loadSettings);
@@ -168,39 +165,7 @@ end
 
 
 function VIPOrderManager:registerActionEvents()
-    -- dbPrintHeader("VIPOrderManager:registerActionEvents()")
-
-	if g_currentMission:getIsClient() then --isOwner
-		-- -- local result, actionEventId = InputBinding.registerActionEvent(g_inputBinding, 'ShowCurrentVIPOrder',self, VIPOrderManager.ShowCurrentVIPOrder ,false ,true ,false ,true)
-		-- local result, actionEventId = g_inputBinding:registerActionEvent('ShowCurrentVIPOrder',InputBinding.NO_EVENT_TARGET, VIPOrderManager.ShowCurrentVIPOrder ,false ,true ,false ,true)
-		-- dbPrintf("Result=%s | actionEventId=%s | g_currentMission:getIsClient()=%s", result, actionEventId, g_currentMission:getIsClient())
-		-- if result and actionEventId then
-		-- 	g_inputBinding:setActionEventTextVisibility(actionEventId, true)
-		-- 	g_inputBinding:setActionEventActive(actionEventId, true)
-		-- 	g_inputBinding:setActionEventTextPriority(actionEventId, GS_PRIO_VERY_LOW) -- GS_PRIO_VERY_HIGH, GS_PRIO_HIGH, GS_PRIO_LOW, GS_PRIO_VERY_LOW
-
-		-- 	-- table.insert(VIPOrderManager.eventName, actionEventId);
-		-- 	-- g_inputBinding.events[actionEventId].displayIsVisible = true;
-		-- 	dbPrintf("Action event inserted successfully")
-		-- end
-		-- local result2, actionEventId2 = g_inputBinding:registerActionEvent('ShowVIPOrderDlg',InputBinding.NO_EVENT_TARGET, VIPOrderManager.ShowVIPOrderDlg ,false ,true ,false ,true)
-		-- dbPrintf("Result2=%s | actionEventId2=%s | g_currentMission:getIsClient()=%s", result2, actionEventId2, g_currentMission:getIsClient())
-		-- if result2 and actionEventId2 then
-		-- 	g_inputBinding:setActionEventTextVisibility(actionEventId2, true)
-		-- 	g_inputBinding:setActionEventActive(actionEventId2, true)
-		-- 	g_inputBinding:setActionEventTextPriority(actionEventId2, GS_PRIO_VERY_LOW) -- GS_PRIO_VERY_HIGH, GS_PRIO_HIGH, GS_PRIO_LOW, GS_PRIO_VERY_LOW
-
-		-- 	-- table.insert(VIPOrderManager.eventName, actionEventId2);
-		-- 	-- g_inputBinding.events[actionEventId2].displayIsVisible = true;
-		-- 	dbPrintf("Action event inserted successfully")
-		-- end
-
-		if infoHud == nil then
-			infoHud = InfoHUD.new()
-			infoHud:setVisible(true)
-		end
-		-- hud:delete()
-	end
+    dbPrintHeader("VIPOrderManager:registerActionEvents()")
 end
 
 
@@ -1181,10 +1146,7 @@ function VIPOrderManager:UpdateOutputLines()
 		end
 		table.insert(VIPOrderManager.outputLines, {text = line, size = fontSize, bold = false, align=RenderText.ALIGN_LEFT, colorId = fillLevelColor, x = posX + posXIncrease, y = posY})
 		posY = posY - fontSize
-		local textWidth = getTextWidth(fontSize, line)
-		if (textWidth + posXIncrease > maxTextWidth) then
-			maxTextWidth = textWidth + posXIncrease
-		end
+		maxTextWidth = math.max(getTextWidth(fontSize, line) + posXIncrease, maxTextWidth)
 
 		isOrderCompleted = isOrderCompleted and requiredQuantity <= 0
 		payoutTotal = payoutTotal + vipOrderEntry.payout
@@ -1194,9 +1156,18 @@ function VIPOrderManager:UpdateOutputLines()
 	table.insert(VIPOrderManager.outputLines, {text = line, size = fontSize, bold = true, align=RenderText.ALIGN_LEFT, colorId = 7, x = posX, y = posY})
 	posY = posY - fontSize
 
-	if infoHud ~= nil then
-		infoHud:setPosition(VIPOrderManager.outputStartPoint.x - 0.005, VIPOrderManager.outputStartPoint.y + 0.005 + fontSize)
-		infoHud:setDimension(maxTextWidth + 0.01, VIPOrderManager.outputStartPoint.y - posY + fontSize)
+
+	-- Create info overlay first time
+	if VIPOrderManager.infoOverlay == nil then
+		VIPOrderManager.infoOverlay = Overlay.new(VIPOrderManager.infoOverlayBackground,  VIPOrderManager.outputStartPoint.x - 0.005, VIPOrderManager.outputStartPoint.y + 0.005 + fontSize, maxTextWidth + 0.01, VIPOrderManager.outputStartPoint.y - posY + fontSize)
+		VIPOrderManager.infoOverlay:setColor(1.0, 1.0, 1.0, 1.0)
+		VIPOrderManager.infoOverlay:setAlignment(Overlay.ALIGN_VERTICAL_TOP, Overlay.ALIGN_HORIZONTAL_LEFT)
+	end
+
+	-- Set position and dimension of info overlay
+	if VIPOrderManager.infoOverlay ~= nil then
+		VIPOrderManager.infoOverlay:setPosition(VIPOrderManager.outputStartPoint.x - 0.005, VIPOrderManager.outputStartPoint.y + 0.005 + fontSize)
+		VIPOrderManager.infoOverlay:setDimension(maxTextWidth + 0.01, VIPOrderManager.outputStartPoint.y - posY + fontSize)
 	end
 
 	return isOrderCompleted and MyTools:getCountElements(VIPOrder.entries) > 0
@@ -1242,14 +1213,6 @@ function VIPOrderManager:update(dt)
 			end
 		end
 	end
-
-	if infoHud ~= nil then
-		if #VIPOrderManager.VIPOrders > 0  and #VIPOrderManager.outputLines > 0 then
-			infoHud:setVisible(VIPOrderManager.showVIPOrder > 0)
-		else
-			infoHud:setVisible(false)
-		end
-	end
 end
 
 
@@ -1258,13 +1221,11 @@ function VIPOrderManager:draw()
 
 	-- Only render when no other GUI is open
     if g_gui.currentGuiName ~= "InGameMenu" and VIPOrderManager.showVIPOrder > 0 and VIPOrderManager.InitDone then --if g_gui.currentGui == nil
+		VIPOrderManager.infoOverlay:render()
+
 		for _, line in ipairs(VIPOrderManager.outputLines) do
 			VIPOrderManager:renderText(line.x, line.y, line.size, line.text, line.bold, line.colorId, line.align)
-		end;
-	end
-	
-	if infoHud ~= nil then
-		infoHud:draw()
+		end
 	end
 end
 

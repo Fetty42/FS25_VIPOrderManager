@@ -2,7 +2,7 @@
 -- Date: 08.12.2024
 -- Version: 1.0.0.0
 
-local isDbPrintfOn = true
+local isDbPrintfOn = false
 
 -- Function to print debug messages if debugging is enabled
 -- Usage: dbPrintf("Message: %s", message)
@@ -34,18 +34,21 @@ PlayerInputComponent.registerGlobalPlayerActionEvents = Utils.appendedFunction(
                 VIPOrderManager.actionEventId = actionEventId
                 g_inputBinding:setActionEventTextPriority(actionEventId, GS_PRIO_VERY_LOW) -- GS_PRIO_VERY_HIGH, GS_PRIO_HIGH, GS_PRIO_LOW, GS_PRIO_VERY_LOW
                 g_inputBinding:setActionEventTextVisibility(actionEventId, true) -- INFO: change "false" to "true" to show keybinding in help window
+                dbPrintf("FS25_VIPOrderManager - Register key (controlling=%s, action=%s, actionId=%s)", controlling, InputAction.ShowCurrentVIPOrder, actionEventId)
             else
-                dbPrintf("    Failed to register key for FS25_VIPOrderManager (controlling=%s, action=%s, actionId=%s)", controlling, InputAction.ShowCurrentVIPOrder, actionEventId)
+                -- Sometimes the registration for cotrolling=vehicle goes wrong. But I don't know why. Nevertheless, it is needed!
+                dbPrintf("FS25_VIPOrderManager - Failed to register key (controlling=%s, action=%s, actionId=%s)", controlling, InputAction.ShowCurrentVIPOrder, actionEventId)
             end    
 
 
             local success, actionEventId, otherEvents = g_inputBinding:registerActionEvent(InputAction.ShowVIPOrderDlg, VIPOrderManager, VIPOrderManager.ShowVIPOrderDlg, triggerUp, triggerDown, triggerAlways, startActive, callbackState, disableConflictingBindings);
             if success then
                 VIPOrderManager.actionEventId = actionEventId
-                g_inputBinding:setActionEventTextPriority(actionEventId, GS_PRIO_LOW) -- GS_PRIO_VERY_HIGH, GS_PRIO_HIGH, GS_PRIO_LOW, GS_PRIO_VERY_LOW
+                g_inputBinding:setActionEventTextPriority(actionEventId, GS_PRIO_VERY_LOW) -- GS_PRIO_VERY_HIGH, GS_PRIO_HIGH, GS_PRIO_LOW, GS_PRIO_VERY_LOW
                 g_inputBinding:setActionEventTextVisibility(actionEventId, true) -- INFO: change "false" to "true" to show keybinding in help window
+                dbPrintf("FS25_VIPOrderManager - Register key (controlling=%s, action=%s, actionId=%s)", controlling, InputAction.ShowVIPOrderDlg, actionEventId)
             else
-                dbPrintf("    Failed to register key for FS25_VIPOrderManager (controlling=%s, action=%s, actionId=%s)", controlling, InputAction.ShowVIPOrderDlg, actionEventId)
+                dbPrintf("FS25_VIPOrderManager - Failed to register key (controlling=%s, action=%s, actionId=%s)", controlling, InputAction.ShowVIPOrderDlg, actionEventId)
             end    
 
             -- g_inputBinding:setActionEventText(eventId, g_i18n:getText("moh_HIDE"));
