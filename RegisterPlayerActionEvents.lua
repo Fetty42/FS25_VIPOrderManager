@@ -44,7 +44,7 @@ PlayerInputComponent.registerGlobalPlayerActionEvents = Utils.appendedFunction(
             local success, actionEventId, otherEvents = g_inputBinding:registerActionEvent(InputAction.ShowVIPOrderDlg, VIPOrderManager, VIPOrderManager.ShowVIPOrderDlg, triggerUp, triggerDown, triggerAlways, startActive, callbackState, disableConflictingBindings);
             if success then
                 VIPOrderManager.actionEventId = actionEventId
-                g_inputBinding:setActionEventTextPriority(actionEventId, GS_PRIO_VERY_LOW) -- GS_PRIO_VERY_HIGH, GS_PRIO_HIGH, GS_PRIO_LOW, GS_PRIO_VERY_LOW
+                g_inputBinding:setActionEventTextPriority(actionEventId, GS_PRIO_LOW) -- GS_PRIO_VERY_HIGH, GS_PRIO_HIGH, GS_PRIO_LOW, GS_PRIO_VERY_LOW
                 g_inputBinding:setActionEventTextVisibility(actionEventId, true) -- INFO: change "false" to "true" to show keybinding in help window
                 dbPrintf("FS25_VIPOrderManager - Register key (controlling=%s, action=%s, actionId=%s)", controlling, InputAction.ShowVIPOrderDlg, actionEventId)
             else
