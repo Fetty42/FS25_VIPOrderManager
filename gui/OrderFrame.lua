@@ -39,7 +39,10 @@ end
 function OrderFrame:onOpen()
 	-- dbPrintf("OrderFrame:onOpen()")
 	OrderFrame:superClass().onOpen(self)
-	FocusManager:setFocus(self.orderTable)
+
+	self:setSoundSuppressed(true)
+    FocusManager:setFocus(self.orderTable)
+    self:setSoundSuppressed(false)
 end
 
 
@@ -99,7 +102,11 @@ function OrderFrame:setVIPOrders(VIPOrders)
 		table.insert(self.VIPOrdersData, VIPOrderData)
 	end
    
-	self.orderTable:reloadData()    
+	self.orderTable:reloadData()
+
+	self:setSoundSuppressed(true)
+    FocusManager:setFocus(self.orderTable)
+    self:setSoundSuppressed(false)
 end
 
 

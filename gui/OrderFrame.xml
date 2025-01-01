@@ -18,7 +18,7 @@
                 <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px 2px" />
             </Bitmap>
 
-            <SmoothList profile="ingameMenuMyList" id="orderTable" focusInit="onOpen" focusChangeTop="nil" focusChangeBottom="nil" listSectionHeader="section" position="50px -145px" size="1230px 550px">
+            <SmoothList profile="ingameMenuMyList" id="orderTable" focusInit="onOpen" focusChangeTop="nil" focusChangeBottom="nil" selectedWithoutFocus="false" listSectionHeader="section" position="50px -145px" size="1230px 550px">
                 <ListItem profile="ingameMenuMyListItem"  name="orderRowTemplate" size="1230px 40.77px">
                     <Bitmap profile="ingameMenuMyRowCellImage" name="fillTypeIcon" />
                     <Text profile="ingameMenuMyRowCellLeft" position="45px 0px" size="325px 40.77px" name="ftTitle" />

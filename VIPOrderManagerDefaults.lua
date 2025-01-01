@@ -46,8 +46,7 @@ table.insert(VIPOrderManager.groupNameSettings, {groupName="Production", 					se
 
 -- overwrite group name which comes from the ftConfig defaults
 VIPOrderManager.defaultGroupNameOverwriting = {}
--- VIPOrderManager.defaultGroupNameOverwriting["GOATMILK"] = "Productions easy"
--- VIPOrderManager.defaultGroupNameOverwriting["FORAGE"] = "Productions easy"
+VIPOrderManager.defaultGroupNameOverwriting["FORAGE"] = "Productions easy"
 
 
 -- groupName="<group name>"
@@ -91,6 +90,7 @@ VIPOrderManager.ftConfigs =
 	EGG 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={2,1,1}, quantityCorrectionFactor=0.7, probability={15, 20, 25}},	-- Eier
 	WOOL 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.7, probability={15, 17, 25}},	-- Wolle
 	MILK 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=1.0, probability={10, 15, 25}},	-- Milch
+	BUFFALOMILK			= {groupName="Productions easy", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=1.0, probability={10, 15, 25}},	-- Büffelmilch
 	GOATMILK 			= {groupName="Productions easy", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=1.0, probability={10, 15, 25}},	-- Ziegenmilch
 	LIQUIDMANURE 		= {groupName="Productions easy", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=0.1, probability={10, 15, 25}},	-- Gülle
 	MANURE 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=0.1, probability={10, 15, 25}},	-- Mist

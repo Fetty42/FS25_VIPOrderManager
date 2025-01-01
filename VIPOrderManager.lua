@@ -3,7 +3,7 @@
 -- Version: 1.0.0.0
 
 local dbPrintfOn = false
-local dbInfoPrintfOn = true
+local dbInfoPrintfOn = false
 
 local function dbInfoPrintf(...)
 	if dbInfoPrintfOn then
@@ -103,7 +103,29 @@ function VIPOrderManager:loadMap(name)
 		g_messageCenter:subscribe(MessageType.HOUR_CHANGED, self.onHourChanged, self)
 	end
 	math.randomseed(getDate("%S")+getDate("%M"))
-end;
+
+	-- todo: Fix problem, that COW_WATERBUFFALO is not assigned to the category "Animal"
+	local buffaloFt = g_fillTypeManager:getFillTypeByName("COW_WATERBUFFALO")
+	local animalftCategoryId = 18
+	if not g_fillTypeManager:getIsFillTypeInCategory(buffaloFt.index, "ANIMAL") then
+--		FillTypeManager:addFillTypeToCategory(buffaloFt.index, animalftCategoryId)
+        if animalftCategoryId ~= nil and buffaloFt.index ~= nil then
+            if g_fillTypeManager.categoryIndexToFillTypes[animalftCategoryId] ~= nil then
+                -- category -> fillType
+                g_fillTypeManager.categoryIndexToFillTypes[animalftCategoryId][buffaloFt.index] = true
+
+                -- fillType -> categories
+                if g_fillTypeManager.fillTypeIndexToCategories[buffaloFt.index] == nil then
+                    g_fillTypeManager.fillTypeIndexToCategories[buffaloFt.index] = {}
+                end
+                g_fillTypeManager.fillTypeIndexToCategories[buffaloFt.index][animalftCategoryId] = true
+            end
+        end
+        print("VIPOrderManager:loadMap Fix FS25 1.4: add fill type 'COW_WATERBUFFALO' to category 'ANIMAL'")
+	else
+		print("VIPOrderManager:loadMap Fix FS25 1.4: add fill type 'COW_WATERBUFFALO' to category 'ANIMAL', no longer needed")
+	end
+end
 
 
 function VIPOrderManager:onHourChanged(hour)
@@ -327,14 +349,15 @@ function VIPOrderManager:GetExistingProductionAndAnimalHusbandryOutputs()
 		-- remember for later to list all animal subtypes
 		foundAnimalTypeNames[husbandry.animalTypeName] = math.max(foundAnimalTypeNames[husbandry.animalTypeName] or 0, selfOwned and 2 or 1)
 
-		isMilk = specHusbandryMilk ~= nil and math.max(isMilk, selfOwned and 2 or 1) or isMilk
-		isLiquidManure = specHusbandryLiquidManure ~= nil and math.max(isLiquidManure, selfOwned and 2 or 1) or isLiquidManure
-		isManure = isManureActive and math.max(isManure, selfOwned and 2 or 1) or isManure
+		isMilk = specHusbandryMilk ~= nil and math.max(isMilk, selfOwned and 2 or 1) or isMilk  -- todo: use specHusbandryMilk.fillTypes --> ftId
+		isLiquidManure = specHusbandryLiquidManure ~= nil and math.max(isLiquidManure, selfOwned and 2 or 1) or isLiquidManure  -- todo: use specHusbandryLiquidManure.fillType --> ftId
+		isManure = isManureActive and math.max(isManure, selfOwned and 2 or 1) or isManure  --> todo: use specHusbandryStraw.outputFillType --> ftId and specHusbandryStraw.isManureActive
 	end
 
 	-- insert animal output products
 	if isMilk > 0 then
-		VIPOrderManager.existingAnimalHusbandryOutputs.MILK = isMilk	
+		VIPOrderManager.existingAnimalHusbandryOutputs.MILK = isMilk
+		VIPOrderManager.existingAnimalHusbandryOutputs.BUFFALOMILK = isMilk
 	end
 	if isLiquidManure > 0 then
 		VIPOrderManager.existingAnimalHusbandryOutputs.LIQUIDMANURE = isLiquidManure	
@@ -347,9 +370,7 @@ function VIPOrderManager:GetExistingProductionAndAnimalHusbandryOutputs()
 	end
 	if foundAnimalTypeNames["SHEEP"] ~= nil then
 		VIPOrderManager.existingAnimalHusbandryOutputs.WOOL = foundAnimalTypeNames["SHEEP"]
-	end
-	if foundAnimalTypeNames["GOAT"] ~= nil then
-		VIPOrderManager.existingAnimalHusbandryOutputs.GOATMILK = foundAnimalTypeNames["GOAT"]
+		VIPOrderManager.existingAnimalHusbandryOutputs.GOATMILK = foundAnimalTypeNames["SHEEP"]
 	end
 
 	-- insert animal fill types
@@ -717,24 +738,28 @@ function VIPOrderManager:GetFillTypeConfig(possibleFT)
 	local ftName = possibleFT.name
 	local isAnimal = possibleFT.isAnimal
 	local ftConfig = VIPOrderManager.ftConfigs[ftName]
+	local defaultConfigMsg = ""
 
 	if ftConfig == nil then
 		if g_fruitTypeManager:getFruitTypeByName(ftName) ~= nil and not isAnimal then
 			ftConfig = VIPOrderManager.ftConfigs["DEFAULT_FRUITTYPE"]
-			dbInfoPrintf("VIPOrderManager - '%s': fruit type without config. Take config 'DEFAULT_FRUITTYPE'", ftName)
+			defaultConfigMsg = "Fill type without config. Take default config for fruit types"
+			dbPrintf("VIPOrderManager - '%s': fruit type without config. Take config 'DEFAULT_FRUITTYPE'", ftName)
 		elseif isAnimal then
 			local configName = "ANIMALTYPE_" .. string.upper(possibleFT.animalTypeName)
 			if VIPOrderManager.ftConfigs[configName] == nil then
 				configName = "DEFAULT_ANIMALTYPE"
+				defaultConfigMsg = "Fill type without config. Take default config for animals"
 				if possibleFT.animalTypeCount == 1 then -- print only once
-					dbInfoPrintf("VIPOrderManager - '%s': animal type without config. Take config 'DEFAULT_ANIMALTYPE'", animalTypeName)
+					dbPrintf("VIPOrderManager - '%s': animal type without config. Take config 'DEFAULT_ANIMALTYPE'", animalTypeName)
 				end
 			end
 			
 			ftConfig = VIPOrderManager.ftConfigs[configName]
 		else
 			ftConfig = VIPOrderManager.ftConfigs["DEFAULT_FILLTYPE"]
-			dbInfoPrintf("VIPOrderManager - '%s': fill type without config. Take config 'DEFAULT_FILLTYPE'", ftName)
+			defaultConfigMsg = "Fill type without config. Take default config for fill types"
+			dbPrintf("VIPOrderManager - '%s': fill type without config. Take config 'DEFAULT_FILLTYPE'", ftName)
 		end
 
 		VIPOrderManager.ftConfigs[ftName] = ftConfig
@@ -744,6 +769,11 @@ function VIPOrderManager:GetFillTypeConfig(possibleFT)
 	ftConfigCopy.minOrderLevel = ftConfig.minOrderLevel[1]
 	ftConfigCopy.probability = ftConfig.probability[1]
 	ftConfigCopy.msg = {}
+
+	-- add message when default config is used
+	if defaultConfigMsg ~= "" then
+		table.insert(ftConfigCopy.msg, defaultConfigMsg)
+	end
 
 	if VIPOrderManager.defaultGroupNameOverwriting[ftName] ~= nil then
 		ftConfigCopy.groupName = VIPOrderManager.defaultGroupNameOverwriting[ftName]
@@ -991,7 +1021,6 @@ function VIPOrderManager:addAllAnimalFillTypes(possibleFillTypes)
     dbPrintHeader("VIPOrderManager:addAllAnimalFillTypes()")
 
     local animalTypeIndexes = {}
-
 	for i, fillTypeIdx in pairs(g_fillTypeManager:getFillTypesByCategoryNames("ANIMAL HORSE")) do
         local fillType = g_fillTypeManager:getFillTypeByIndex(fillTypeIdx)
         local animalSubType = g_currentMission.animalSystem.fillTypeIndexToSubType[fillTypeIdx]
