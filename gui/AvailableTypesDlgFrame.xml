@@ -10,22 +10,22 @@
     
             <!-- Main list -->
             <Bitmap profile="ingameMenuMyList" id="tableHeaderBox" position="50px -90px" size="1230px 50px">
-                <Text profile="ingameMenuMyHeaderLeft" position="20px -0px" size="350px 40.77px" text="$l10n_ui_AvaliableTypesDlg_title_title"/>
-                <Text profile="ingameMenuMyHeaderRight" position="380px -0px" size="100px 40.77px" text="$l10n_ui_AvaliableTypesDlg_title_minOrderLevel"/>
-                <Text profile="ingameMenuMyHeaderRight" position="490px -0px" size="130px 40.77px" text="$l10n_ui_AvaliableTypesDlg_title_probability"/>
-                <Text profile="ingameMenuMyHeaderRight" position="640px -0px" size="150px 40.77px" text="$l10n_ui_AvaliableTypesDlg_title_quantityCorrectionFactor"/>
-                <Text profile="ingameMenuMyHeaderLeft" position="810px -0px" size="580px 40.77px" text="$l10n_ui_AvaliableTypesDlg_title_msg"/>
+                <Text profile="ingameMenuMyHeaderLeft" position="20px -0px" size="300px 40.77px" text="$l10n_ui_AvaliableTypesDlg_title_title"/>
+                <Text profile="ingameMenuMyHeaderRight" position="330px -0px" size="100px 40.77px" text="$l10n_ui_AvaliableTypesDlg_title_minOrderLevel"/>
+                <Text profile="ingameMenuMyHeaderRight" position="440px -0px" size="130px 40.77px" text="$l10n_ui_AvaliableTypesDlg_title_probability"/>
+                <Text profile="ingameMenuMyHeaderRight" position="590px -0px" size="150px 40.77px" text="$l10n_ui_AvaliableTypesDlg_title_quantityCorrectionFactor"/>
+                <Text profile="ingameMenuMyHeaderLeft" position="760px -0px" size="630px 40.77px" text="$l10n_ui_AvaliableTypesDlg_title_msg"/>
                 <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px 2px" />
             </Bitmap>
 
             <SmoothList profile="ingameMenuMyList" id="typesTable" focusInit="onOpen" focusChangeTop="nil" focusChangeBottom="nil" position="50px -145px" size="1230px 550px" listSectionHeader="sectionTypes" >
                 <ListItem profile="ingameMenuMyListItem"  name="orderRowTemplate" size="1230px 40.77px">
                     <Bitmap profile="ingameMenuMyRowCellImage" name="ftIcon" />
-                    <Text profile="ingameMenuMyRowCellLeft" position="40px 0px" size="350px 40.77px" name="ftTitle"/>
-                    <Text profile="ingameMenuMyRowCellRight" position="380px 0px" size="100px 40.77px" name="minOrderLevel" textAlignment="right"/>
-                    <Text profile="ingameMenuMyRowCellRight" position="490px 0px" size="130px 40.77px" name="probability" textAlignment="right"/>
-                    <Text profile="ingameMenuMyRowCellRight" position="640px 0px" size="150px 40.77px" name="quantityCorrectionFactor" textAlignment="right"/>
-                    <Text profile="ingameMenuMyRowCellLeft" position="810px 0px" size="400px 40.77px" name="msg" textSize="14px" textMaxNumLines="2" textLayoutMode="scrolling"/>
+                    <Text profile="ingameMenuMyRowCellLeft" position="40px 0px" size="350px 40.77px" name="ftTitle" textLayoutMode="scrolling"/>
+                    <Text profile="ingameMenuMyRowCellRight" position="330px 0px" size="100px 40.77px" name="minOrderLevel" textAlignment="right"/>
+                    <Text profile="ingameMenuMyRowCellRight" position="440px 0px" size="130px 40.77px" name="probability" textAlignment="right"/>
+                    <Text profile="ingameMenuMyRowCellRight" position="590px 0px" size="150px 40.77px" name="quantityCorrectionFactor" textAlignment="right"/>
+                    <Text profile="ingameMenuMyRowCellLeft" position="760px 0px" size="450px 40.77px" name="msg" textSize="14px" textMaxNumLines="2" textLayoutMode="scrolling"/>
                 </ListItem>
 
                 <ListItem profile="ingameMenuMyListItem" name="sectionTypes" imageColor="0 0 0 0.35">

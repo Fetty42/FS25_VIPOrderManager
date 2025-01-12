@@ -80,17 +80,6 @@ source(VIPOrderManager.dir .. "gui/OrderFrame.lua")
 
 function VIPOrderManager:loadMap(name)
     dbPrintHeader("VIPOrderManager:loadMap()")
-
-	-- load dialogs
-	g_gui:loadProfiles(VIPOrderManager.dir .. "gui/guiProfiles.xml")
-
-	local guiOrderFrame = OrderFrame.new(g_i18n)
-	g_gui:loadGui(VIPOrderManager.dir .. "gui/OrderFrame.xml", "OrderFrame", guiOrderFrame)
-
-	local guiAvailableTypesDlgFrame = AvailableTypesDlgFrame.new(g_i18n)
-	g_gui:loadGui(VIPOrderManager.dir .. "gui/AvailableTypesDlgFrame.xml", "AvailableTypesDlgFrame", guiAvailableTypesDlgFrame)
-
-	
 	
 	if g_currentMission:getIsClient() then
 
@@ -743,13 +732,13 @@ function VIPOrderManager:GetFillTypeConfig(possibleFT)
 	if ftConfig == nil then
 		if g_fruitTypeManager:getFruitTypeByName(ftName) ~= nil and not isAnimal then
 			ftConfig = VIPOrderManager.ftConfigs["DEFAULT_FRUITTYPE"]
-			defaultConfigMsg = "Fill type without config. Take default config for fruit types"
+			defaultConfigMsg = "Using default config"
 			dbPrintf("VIPOrderManager - '%s': fruit type without config. Take config 'DEFAULT_FRUITTYPE'", ftName)
 		elseif isAnimal then
 			local configName = "ANIMALTYPE_" .. string.upper(possibleFT.animalTypeName)
 			if VIPOrderManager.ftConfigs[configName] == nil then
 				configName = "DEFAULT_ANIMALTYPE"
-				defaultConfigMsg = "Fill type without config. Take default config for animals"
+				defaultConfigMsg = "Using default config"
 				if possibleFT.animalTypeCount == 1 then -- print only once
 					dbPrintf("VIPOrderManager - '%s': animal type without config. Take config 'DEFAULT_ANIMALTYPE'", animalTypeName)
 				end
@@ -758,11 +747,11 @@ function VIPOrderManager:GetFillTypeConfig(possibleFT)
 			ftConfig = VIPOrderManager.ftConfigs[configName]
 		else
 			ftConfig = VIPOrderManager.ftConfigs["DEFAULT_FILLTYPE"]
-			defaultConfigMsg = "Fill type without config. Take default config for fill types"
+			defaultConfigMsg = "Using default config"
 			dbPrintf("VIPOrderManager - '%s': fill type without config. Take config 'DEFAULT_FILLTYPE'", ftName)
 		end
 
-		VIPOrderManager.ftConfigs[ftName] = ftConfig
+		-- VIPOrderManager.ftConfigs[ftName] = ftConfig
 	end
 
 	local ftConfigCopy = MyTools:deepcopy(ftConfig)
@@ -810,7 +799,7 @@ function VIPOrderManager:GetFillTypeConfig(possibleFT)
 	end
 
 	-- ftconfig overwrite for minOrderLevel and probability if fitting Production already exists
-	if VIPOrderManager.existingProductionOutputs[ftName] and ftConfigCopy.msg[1] == nil and (possibleFT.isUsable == nil or possibleFT.isUsable) then
+	if VIPOrderManager.existingProductionOutputs[ftName] and (possibleFT.isUsable == nil or possibleFT.isUsable) then
 		local existingOrSelfOwnedLevel = VIPOrderManager.existingProductionOutputs[ftName]
 
 		if ftConfig.minOrderLevel ~= nil and ftConfig.minOrderLevel[2] ~= nil and ftConfig.minOrderLevel[3] ~= nil then

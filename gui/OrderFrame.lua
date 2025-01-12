@@ -287,6 +287,9 @@ function OrderFrame:onShowAvailableTypes(m)
 	table.sort(data, CompSection)
 
 	-- create and show dialog
+	local guiAvailableTypesDlgFrame = AvailableTypesDlgFrame.new(g_i18n)
+	g_gui:loadGui(VIPOrderManager.dir .. "gui/AvailableTypesDlgFrame.xml", "AvailableTypesDlgFrame", guiAvailableTypesDlgFrame)
+
 	local dialog = g_gui:showDialog("AvailableTypesDlgFrame", true) -- true = do close other dialogs
     if dialog ~= nil then
         dialog.target:InitData(data)
