@@ -40,6 +40,11 @@ function OrderFrame:onOpen()
 	-- dbPrintf("OrderFrame:onOpen()")
 	OrderFrame:superClass().onOpen(self)
 
+	self.buttonTag.disabled = true
+	self.buttonTag.text = string.upper(g_i18n:getText("ui_orderDlg_btnTagSellPoint"))
+
+	self.buttonAbort.disabled = true
+
 	self:setSoundSuppressed(true)
     FocusManager:setFocus(self.orderTable)
     self:setSoundSuppressed(false)
@@ -202,6 +207,8 @@ function OrderFrame:onListSelectionChanged(list, section, index)
     else
         self.buttonTag.disabled = true
     end
+
+	self.buttonAbort.disabled = false
 end
 
 
