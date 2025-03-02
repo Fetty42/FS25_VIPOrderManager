@@ -117,7 +117,7 @@ VIPOrderManager.ftConfigs =
 	PEA 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={30}},		-- Erbsen
 	RICE 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={30}},		-- Reis
 	PARSNIP 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={30}},		-- Pastinaken
-	BEETROOT 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={30}},		-- Rote Beete
+	BEETROOT 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={30}},		-- Rote Bete
 	CARROT 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={30}},		-- Karotten
 
 	-- Tree products
