@@ -17,14 +17,22 @@ local function dbPrintf(...)
 	end
 end
 
-local function dbPrintHeader(ftName)
+local function dbPrint(...)
 	if dbPrintfOn then
-    	print(string.format("Call %s", ftName))
+    	print(...)
 	end
 end
 
-local function Printf(...)
-   	print(string.format(...))
+local function dbPrintHeader(funcName)
+	if dbPrintfOn then
+		if g_currentMission ~=nil and g_currentMission.missionDynamicInfo ~=nil then
+			print(string.format("Call %s: isDedicatedServer=%s | isServer()=%s | isMasterUser=%s | isMultiplayer=%s | isClient()=%s | farmId=%s", 
+							funcName, tostring(g_dedicatedServer~=nil), tostring(g_currentMission:getIsServer()), tostring(g_currentMission.isMasterUser), tostring(g_currentMission.missionDynamicInfo.isMultiplayer), tostring(g_currentMission:getIsClient()), tostring(g_currentMission:getFarmId())))
+		else
+			print(string.format("Call %s: isDedicatedServer=%s | g_currentMission=%s",
+							funcName, tostring(g_dedicatedServer~=nil), tostring(g_currentMission)))
+		end
+	end
 end
 
 VIPOrderManager = {}; -- Class
@@ -707,13 +715,14 @@ function VIPOrderManager:CalculateOwnFieldArea()
 	local fieldAreaSum = 0.0
 	for i, id in pairs(farmlands) do
 		local farmland = g_farmlandManager:getFarmlandById(id)
-		if farmland.field ~= nil then
-            fieldAreaSum = fieldAreaSum + farmland.field.areaHa
-            dbPrintf("  --> %s. Owned Farmland: id=%s | FieldAreaSum=%s", i, farmland.id, g_i18n:formatArea(farmland.field.areaHa, 2))
-        else
-            dbPrintf("  --> %s. Owned Farmland: id=%s | Farmland without field", i, farmland.id)
-        end
-
+		if farmland ~=nil then
+			if farmland.field ~= nil then
+				fieldAreaSum = fieldAreaSum + farmland.field.areaHa
+				dbPrintf("  --> %s. Owned Farmland: id=%s | FieldAreaSum=%s", i, farmland.id, g_i18n:formatArea(farmland.field.areaHa, 2))
+			else
+				dbPrintf("  --> %s. Owned Farmland: id=%s | Farmland without field", i, farmland.id)
+			end
+		end
 	end
 	dbPrintf("  ==> Field area sum: %s", g_i18n:formatArea(fieldAreaSum, 2))
 
@@ -1238,7 +1247,7 @@ function VIPOrderManager:draw()
     -- dbPrintHeader("VIPOrderManager:draw()")
 
 	-- Only render when no other GUI is open
-    if g_gui.currentGuiName ~= "InGameMenu" and VIPOrderManager.showVIPOrder > 0 and VIPOrderManager.InitDone then --if g_gui.currentGui == nil
+    if VIPOrderManager.infoOverlay ~= nil and #VIPOrderManager.outputLines > 0 and g_gui.currentGuiName ~= "InGameMenu" and VIPOrderManager.showVIPOrder > 0 and VIPOrderManager.InitDone then --if g_gui.currentGui == nil
 		VIPOrderManager.infoOverlay:render()
 
 		for _, line in ipairs(VIPOrderManager.outputLines) do
