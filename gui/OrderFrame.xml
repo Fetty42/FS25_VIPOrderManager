@@ -9,27 +9,27 @@
             <Text profile="dialogTitle" text="$l10n_ui_orderDlg_title" id="dialogTitleElement" position="0px -30px" />
 
             <!-- Main list -->
-            <Bitmap profile="ingameMenuMyList" id="tableHeaderBox" position="50px -90px" size="1230px 50px">
-                <Text profile="ingameMenuMyHeaderLeft" position="10px -0px" size="360px 40.77px" text="$l10n_ui_orderDlg_header_product"/>
-                <Text profile="ingameMenuMyHeaderRight" position="400px -0px" size="150px 40.77px" text="$l10n_ui_orderDlg_header_requested"/>
-                <Text profile="ingameMenuMyHeaderRight" position="550px -0px" size="150px 40.77px" text="$l10n_ui_orderDlg_header_delivered"/>
-                <Text profile="ingameMenuMyHeaderRight" position="700px -0px" size="150px 40.77px" text="$l10n_ui_orderDlg_header_payout"/>
-                <Text profile="ingameMenuMyHeaderLeft" position="890px -0px" size="320px 40.77px" text="$l10n_ui_orderDlg_header_station"/>
+            <Bitmap profile="vipOrderManagerGui_List" id="tableHeaderBox" position="50px -90px" size="1230px 50px">
+                <Text profile="vipOrderManagerGui_HeaderLeft" position="10px -0px" size="360px 40.77px" text="$l10n_ui_orderDlg_header_product"/>
+                <Text profile="vipOrderManagerGui_HeaderRight" position="400px -0px" size="150px 40.77px" text="$l10n_ui_orderDlg_header_requested"/>
+                <Text profile="vipOrderManagerGui_HeaderRight" position="550px -0px" size="150px 40.77px" text="$l10n_ui_orderDlg_header_delivered"/>
+                <Text profile="vipOrderManagerGui_HeaderRight" position="700px -0px" size="150px 40.77px" text="$l10n_ui_orderDlg_header_payout"/>
+                <Text profile="vipOrderManagerGui_HeaderLeft" position="890px -0px" size="320px 40.77px" text="$l10n_ui_orderDlg_header_station"/>
                 <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px 2px" />
             </Bitmap>
 
-            <SmoothList profile="ingameMenuMyList" id="orderTable" focusInit="onOpen" focusChangeTop="nil" focusChangeBottom="nil" selectedWithoutFocus="false" listSectionHeader="section" position="50px -145px" size="1230px 550px">
-                <ListItem profile="ingameMenuMyListItem"  name="orderRowTemplate" size="1230px 40.77px">
-                    <Bitmap profile="ingameMenuMyRowCellImage" name="fillTypeIcon" />
-                    <Text profile="ingameMenuMyRowCellLeft" position="45px 0px" size="325px 40.77px" name="ftTitle" />
-                    <Text profile="ingameMenuMyRowCellRight" position="400px 0px" size="150px 40.77px" name="quantity" textAlignment="right"/>
-                    <Text profile="ingameMenuMyRowCellRight" position="550px 0px" size="150px 40.77px" name="fillLevel" textAlignment="right"/>
-                    <Text profile="ingameMenuMyRowCellRight" position="700px 0px" size="150px 40.77px" name="payout" textAlignment="right"/>
-                    <Text profile="ingameMenuMyRowCellLeft" position="890px 0px" size="320px 40.77px" name="targetStationTitle" textLayoutMode="scrolling"/>
+            <SmoothList profile="vipOrderManagerGui_List" id="orderTable" focusInit="onOpen" focusChangeTop="nil" focusChangeBottom="nil" selectedWithoutFocus="false" listSectionHeader="section" position="50px -145px" size="1230px 550px">
+                <ListItem profile="vipOrderManagerGui_ListItem"  name="orderRowTemplate" size="1230px 40.77px">
+                    <Bitmap profile="vipOrderManagerGui_RowCellImage" name="fillTypeIcon" />
+                    <Text profile="vipOrderManagerGui_RowCellLeft" position="45px 0px" size="325px 40.77px" name="ftTitle" />
+                    <Text profile="vipOrderManagerGui_RowCellRight" position="400px 0px" size="150px 40.77px" name="quantity" textAlignment="right"/>
+                    <Text profile="vipOrderManagerGui_RowCellRight" position="550px 0px" size="150px 40.77px" name="fillLevel" textAlignment="right"/>
+                    <Text profile="vipOrderManagerGui_RowCellRight" position="700px 0px" size="150px 40.77px" name="payout" textAlignment="right"/>
+                    <Text profile="vipOrderManagerGui_RowCellLeft" position="890px 0px" size="320px 40.77px" name="targetStationTitle" textLayoutMode="scrolling"/>
                 </ListItem>
 
-                <ListItem profile="ingameMenuMyListItem" name="section" imageColor="0 0 0 0.35">
-                    <Text profile="ingameMenuMyRowSectionLeft" name="title" textSize="18px" size="355px 40.77px"/>
+                <ListItem profile="vipOrderManagerGui_ListItem" name="section" imageColor="0 0 0 0.35">
+                    <Text profile="vipOrderManagerGui_RowSectionLeft" name="title" textSize="18px" size="355px 40.77px"/>
                 </ListItem>
             </SmoothList>
 

@@ -118,9 +118,9 @@ function VIPOrderManager:loadMap(name)
                 g_fillTypeManager.fillTypeIndexToCategories[buffaloFt.index][animalftCategoryId] = true
             end
         end
-        print("VIPOrderManager:loadMap Fix FS25 1.4: add fill type 'COW_WATERBUFFALO' to category 'ANIMAL'")
+        print("VIPOrderManager:loadMap Fix FS25 1.6: add fill type 'COW_WATERBUFFALO' to category 'ANIMAL'")
 	else
-		print("VIPOrderManager:loadMap Fix FS25 1.4: add fill type 'COW_WATERBUFFALO' to category 'ANIMAL', no longer needed")
+		print("VIPOrderManager:loadMap Fix FS25 1.6: add fill type 'COW_WATERBUFFALO' to category 'ANIMAL', no longer needed")
 	end
 end
 
@@ -741,13 +741,13 @@ function VIPOrderManager:GetFillTypeConfig(possibleFT)
 	if ftConfig == nil then
 		if g_fruitTypeManager:getFruitTypeByName(ftName) ~= nil and not isAnimal then
 			ftConfig = VIPOrderManager.ftConfigs["DEFAULT_FRUITTYPE"]
-			defaultConfigMsg = "Using default config"
+			defaultConfigMsg = "Standard configuration will be used"
 			dbPrintf("VIPOrderManager - '%s': fruit type without config. Take config 'DEFAULT_FRUITTYPE'", ftName)
 		elseif isAnimal then
 			local configName = "ANIMALTYPE_" .. string.upper(possibleFT.animalTypeName)
 			if VIPOrderManager.ftConfigs[configName] == nil then
 				configName = "DEFAULT_ANIMALTYPE"
-				defaultConfigMsg = "Using default config"
+				defaultConfigMsg = "Standard configuration will be used"
 				if possibleFT.animalTypeCount == 1 then -- print only once
 					dbPrintf("VIPOrderManager - '%s': animal type without config. Take config 'DEFAULT_ANIMALTYPE'", animalTypeName)
 				end
@@ -756,7 +756,7 @@ function VIPOrderManager:GetFillTypeConfig(possibleFT)
 			ftConfig = VIPOrderManager.ftConfigs[configName]
 		else
 			ftConfig = VIPOrderManager.ftConfigs["DEFAULT_FILLTYPE"]
-			defaultConfigMsg = "Using default config"
+			defaultConfigMsg = "Standard configuration will be used"
 			dbPrintf("VIPOrderManager - '%s': fill type without config. Take config 'DEFAULT_FILLTYPE'", ftName)
 		end
 
@@ -769,7 +769,7 @@ function VIPOrderManager:GetFillTypeConfig(possibleFT)
 	ftConfigCopy.msg = {}
 
 	-- add message when default config is used
-	if defaultConfigMsg ~= "" then
+	if defaultConfigMsg ~= "" and (dbInfoPrintfOn or dbPrintfOn) then
 		table.insert(ftConfigCopy.msg, defaultConfigMsg)
 	end
 
@@ -786,9 +786,9 @@ function VIPOrderManager:GetFillTypeConfig(possibleFT)
 			local msg
 			ftConfigCopy.minOrderLevel = ftConfig.minOrderLevel[existingOrSelfOwnedLevel+1]
 			if existingOrSelfOwnedLevel == 1 then
-				msg = string.format("Decrease 'minOrderLevel' as animal husbandry already exists but is not owned: %s --> %s", ftConfig.minOrderLevel[1], ftConfigCopy.minOrderLevel)
+				msg = string.format("Reduced 'Min. Level' as animal husbandry is existing but not owned: %s --> %s", ftConfig.minOrderLevel[1], ftConfigCopy.minOrderLevel)
 			else
-				msg = string.format("Decrease 'minOrderLevel' as animal husbandry is already owned: %s --> %s", ftConfig.minOrderLevel[1], ftConfigCopy.minOrderLevel)
+				msg = string.format("Reduced 'Min. Level' as animal husbandry is owned: %s --> %s", ftConfig.minOrderLevel[1], ftConfigCopy.minOrderLevel)
 			end
 			dbPrintf("    - " .. msg)
 			table.insert(ftConfigCopy.msg, msg)
@@ -798,9 +798,9 @@ function VIPOrderManager:GetFillTypeConfig(possibleFT)
 			local msg
 			ftConfigCopy.probability = ftConfig.probability[existingOrSelfOwnedLevel+1]
 			if existingOrSelfOwnedLevel == 1 then
-				msg = string.format("Increase 'Probability' as animal husbandry already exists but is not owned: %s --> %s", ftConfig.probability[1], ftConfigCopy.probability)
+				msg = string.format("Increased 'Probability' as animal husbandry is existing but not owned: %s%% --> %s%%", ftConfig.probability[1], ftConfigCopy.probability)
 			else
-				msg = string.format("Increase 'Probability' as animal husbandry is already owned: %s --> %s", ftConfig.probability[1], ftConfigCopy.probability)
+				msg = string.format("Increased 'Probability' as animal husbandry is owned: %s%% --> %s%%", ftConfig.probability[1], ftConfigCopy.probability)
 			end
 			dbPrintf("    - " .. msg)
 			table.insert(ftConfigCopy.msg, msg)
@@ -815,9 +815,9 @@ function VIPOrderManager:GetFillTypeConfig(possibleFT)
 			local msg
 			ftConfigCopy.minOrderLevel = ftConfig.minOrderLevel[existingOrSelfOwnedLevel+1]
 			if existingOrSelfOwnedLevel == 1 then
-				msg = string.format("Decrease 'minOrderLevel' as production already exists but is not owned: %s --> %s", ftConfig.minOrderLevel[1], ftConfigCopy.minOrderLevel)
+				msg = string.format("Reduced 'Min. Level' as production is existing but not owned: %s --> %s", ftConfig.minOrderLevel[1], ftConfigCopy.minOrderLevel)
 			else
-				msg = string.format("Decrease 'minOrderLevel' as production is already owned: %s --> %s", ftConfig.minOrderLevel[1], ftConfigCopy.minOrderLevel)
+				msg = string.format("Reduced 'Min. Level' as production is  owned: %s --> %s", ftConfig.minOrderLevel[1], ftConfigCopy.minOrderLevel)
 			end
 			dbPrintf("    - " .. msg)
 			table.insert(ftConfigCopy.msg, msg)
@@ -827,9 +827,9 @@ function VIPOrderManager:GetFillTypeConfig(possibleFT)
 			local msg
 			ftConfigCopy.probability = ftConfig.probability[existingOrSelfOwnedLevel+1]
 			if existingOrSelfOwnedLevel == 1 then
-				msg = string.format("Increase 'Probability' as production already exists but is not owned: %s --> %s", ftConfig.probability[1], ftConfigCopy.probability)
+				msg = string.format("Increased 'Probability' as production is existing but not owned: %s%% --> %s%%", ftConfig.probability[1], ftConfigCopy.probability)
 			else
-				msg = string.format("Increase 'Probability' as production is already owned: %s --> %s", ftConfig.probability[1], ftConfigCopy.probability)
+				msg = string.format("Increased 'Probability' as production is owned: %s%% --> %s%%", ftConfig.probability[1], ftConfigCopy.probability)
 			end
 			dbPrintf("    - " .. msg)
 			table.insert(ftConfigCopy.msg, msg)
@@ -842,13 +842,13 @@ function VIPOrderManager:GetFillTypeConfig(possibleFT)
 	if isMaizePlus or isTerraLifePlus then
 		if ftConfig.quantityCorrectionFactorMaizePlus ~= nil then
 			ftConfigCopy.quantityCorrectionFactor = ftConfig.quantityCorrectionFactorMaizePlus
-			local msg = string.format("Overwrite 'quantityCorrectionFactor' as MOD MaizePlus/TerraLifePlus is in use: %s --> %s", ftConfig.quantityCorrectionFactor, ftConfigCopy.quantityCorrectionFactor)
+			local msg = string.format("Overwritten 'Corr. Quantity' as MOD MaizePlus/TerraLifePlus is in use: %s --> %s", ftConfig.quantityCorrectionFactor, ftConfigCopy.quantityCorrectionFactor)
 			dbPrintf("    - " .. msg)
 			table.insert(ftConfigCopy.msg, msg)
 		end
 
 		if ftConfig.probabilityMaizePlus ~= nil then
-			local msg = string.format("Overwrite 'probability' as MOD MaizePlus/TerraLifePlus is in use: %s --> %s", ftConfigCopy.probability, ftConfig.probabilityMaizePlus)
+			local msg = string.format("Overwritten 'Probability' as MOD MaizePlus/TerraLifePlus is in use: %s%% --> %s%%", ftConfigCopy.probability, ftConfig.probabilityMaizePlus)
 			ftConfigCopy.probability = ftConfig.probabilityMaizePlus
 			dbPrintf("    - " .. msg)
 			table.insert(ftConfigCopy.msg, msg)
@@ -891,30 +891,30 @@ function VIPOrderManager:GetRelevantFillTypes(relevantFillTypes)
 
 		-- not allowed
 		if notUsableWarning == nil and not ftConfig.isAllowed then
-			notUsableWarning = "Not usable, because is not allowed per definition"
+			notUsableWarning = "Not used because deactivated by configuration"
         end
 
 		-- not allowed because probability == 0
 		if notUsableWarning == nil and ftConfig.probability == 0 then
-			notUsableWarning = "Not usable, because probability = 0"
+			notUsableWarning = "Not used because probability = 0 per configuration"
         end
 
 
 		-- existing fruittype is not useable
 		local fruitType = g_fruitTypeManager:getFruitTypeByName(possibleFT.name)
 		if notUsableWarning == nil and fruitType ~= nil and not fruitType.shownOnMap then
-			notUsableWarning = string.format("Not usable, because the current map does not support this existing fruittype (not shown on map)")
+			notUsableWarning = string.format("Not used because the current map does not support this fruit type (shownOnMap=false)")
         end
 
 		-- needed original fruit type not available on this map
 		local neededFruitType = ftConfig.neededFruittype
 		if notUsableWarning == nil and neededFruitType ~= nil and g_fruitTypeManager:getFruitTypeByName(neededFruitType) == nil then
-			notUsableWarning = string.format("Not usable, because needed fruittype (%s) is missing", neededFruitType)
+			notUsableWarning = string.format("Not used because required fruit type (%s) is missing", neededFruitType)
 		end
 
 		-- not sell able
 		if notUsableWarning == nil and not possibleFT.showOnPriceTable then
-            notUsableWarning = "Not usable, because not show on price list"
+            notUsableWarning = "Not used because not show on price table (showOnPriceTable=false)"
         end
 
 		--  without sell price
@@ -922,7 +922,7 @@ function VIPOrderManager:GetRelevantFillTypes(relevantFillTypes)
 			if VIPOrderManager.fillTypesNoPriceList[possibleFT.name] == 1 and possibleFT.pricePerLiter > 0 then
 				possibleFT.priceMax = possibleFT.pricePerLiter
 			else
-	            notUsableWarning = "Not usable, because no or negative price per liter defined"
+	            notUsableWarning = "Not used because no or negative price per liter defined (pricePerLiter <= 0)"
 			end
         end
 

@@ -261,10 +261,14 @@ function OrderFrame:onShowAvailableTypes(m)
 		-- item.acceptingStationsString = ft.acceptingStationsString
 
 		if ft.isUsable ~= nil and not ft.isUsable then
+			
+			-- item.msg = isDbPrintfOn and ft.notUsableMsg or ""
 			item.msg = ft.notUsableMsg
 			table.insert(sectionNotUseable.items, item)
 		else
 			item.msg = MyTools:tableToString(ftConfig.msg, "; ")
+			item.msg = table.concat(ftConfig.msg, "\n") or ""
+
 
 			if groupNameSections[ftConfig.groupName] == nil then
 				local newSection = {}

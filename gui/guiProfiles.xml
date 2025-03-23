@@ -5,7 +5,7 @@
         <Preset name="colorListHeaderBackground" value="0 0 0 0.35" />
     </Presets>
 
-    <Profile name="ingameMenuMyHeaderRight" extends="baseReference">
+    <Profile name="vipOrderManagerGui_HeaderRight" extends="baseReference">
         <!-- <size value="155px 32px" /> -->
         <imageColor value="0 0 0 0" />
         <textFocusedColor value="$preset_fs25_colorMainHighlight" />
@@ -18,7 +18,7 @@
         <textDisabledColor value="$preset_colorDisabled" />
     </Profile>
 
-    <Profile name="ingameMenuMyHeaderLeft" extends="baseReference">
+    <Profile name="vipOrderManagerGui_HeaderLeft" extends="baseReference">
         <!-- <size value="155px 32px" /> -->
         <imageColor value="0 0 0 0" />
         <textFocusedColor value="$preset_fs25_colorMainHighlight" />
@@ -31,18 +31,18 @@
         <textDisabledColor value="$preset_colorDisabled" />
     </Profile>
 
-    <Profile name="ingameMenuMyList" extends="emptyPanel" with="anchorStretchingYLeft pivotTopLeft">
+    <Profile name="vipOrderManagerGui_List" extends="emptyPanel" with="anchorStretchingYLeft pivotTopLeft">
         <!-- <position value="0px -40px" /> -->
     </Profile>
     
-    <Profile name="ingameMenuMyListItem" extends="baseReference" with="anchorTopStretchingX alternating">
+    <Profile name="vipOrderManagerGui_ListItem" extends="baseReference" with="anchorTopStretchingX alternating">
         <height value="32px"/>
         <imageColor value="$preset_fs25_colorGrey" />
         <imageSelectedColor value="$preset_fs25_colorMainHighlight" />
         <alternateBackgroundColor value="$preset_fs25_colorGreyDark_50" />
     </Profile> 
 
-    <Profile name="ingameMenuMyRowCellLeft" extends="baseReference" with="anchorStretchingYLeft">
+    <Profile name="vipOrderManagerGui_RowCellLeft" extends="baseReference" with="anchorStretchingYLeft">
         <!-- <size value="155px 32px" /> -->
         <textBold value="false" />
         <textSize value="15px" />
@@ -52,11 +52,11 @@
         <textDisabledColor value="$preset_colorDisabled" />
     </Profile>
 
-    <Profile name="ingameMenuMyRowCellRight" extends="ingameMenuMyRowCellLeft">
+    <Profile name="vipOrderManagerGui_RowCellRight" extends="vipOrderManagerGui_RowCellLeft">
         <textAlignment value="right" />
     </Profile>
 
-    <Profile name="ingameMenuMyHeaderBox" extends="emptyPanel" with="anchorTopLeft">
+    <Profile name="vipOrderManagerGui_HeaderBox" extends="emptyPanel" with="anchorTopLeft">
         <!-- <size value="1400px 50px"/> -->
         <alignmentX value="left"/>
         <alignmentY value="middle"/>
@@ -69,7 +69,7 @@
         <hasFrame value="false"/>    
     </Profile>
     
-    <Profile name="ingameMenuMyRowSectionLeft" extends="baseReference" with="anchorStretchingYLeft">
+    <Profile name="vipOrderManagerGui_RowSectionLeft" extends="baseReference" with="anchorStretchingYLeft">
         <!-- <size value="155px 32px" /> -->
         <textBold value="false" />
         <textSize value="15px" />
@@ -79,7 +79,7 @@
         <textDisabledColor value="$preset_colorWhite" />
     </Profile>
 
-    <Profile name="ingameMenuMyRowCellImage" extends="baseReference" with="anchorMiddleLeft">
+    <Profile name="vipOrderManagerGui_RowCellImage" extends="baseReference" with="anchorMiddleLeft">
         <size value="24px 24px" />
         <position value="8px 0" />
         <imageSliceId value="noSlice" />
