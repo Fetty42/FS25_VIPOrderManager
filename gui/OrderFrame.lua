@@ -276,6 +276,7 @@ function OrderFrame:onShowAvailableTypes(m)
 				newSection.sectionOrder = groupNameSettingsByGroupNameToIdx[ftConfig.groupName]
 				if newSection.sectionTitle == nil or newSection.sectionTitle == "" or string.find(newSection.sectionTitle, "Missing '") then	-- "Missing 'ui_AvailableTypesDlg_sectionTitle_fruit' in l10n_de.xml"
 					newSection.sectionTitle = "** " .. ftConfig.groupName .. " **"
+					print("FS25_VIPOderManager: Missing 'ui_AvailableTypesDlg_sectionTitle_" .. ftConfig.groupName .. "' in l10n")
 				end
 				
 				newSection.items = {}

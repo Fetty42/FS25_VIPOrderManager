@@ -357,30 +357,46 @@ Per eventuali messaggi di errore o suggerimenti, visitare: https://github.com/Fe
 			<it>Corr. Quantità</it>
 			<ru>Корр. Количество</ru>
 		</text>
-		<text name="ui_AvailableTypesDlg_sectionTitle_fruitTypes">
-			<de>Fruchttypen</de>	
-			<en>Fruit Types</en>
-			<fr>Types de remplissage disponibles</fr>
-			<it>Tipi di riempimento disponibili</it>
-			<ru>Доступные типы наполнения</ru>
-		</text>
-		<text name="ui_AvailableTypesDlg_sectionTitle_fillTypes">
-			<de>Fülltypen</de>	
-			<en>Fill Types</en>
-			<fr>Types de remplissage disponibles</fr>
-			<it>Tipi di riempimento disponibili</it>
-			<ru>Доступные типы наполнения</ru>
-		</text>
-		<text name="ui_AvailableTypesDlg_sectionTitle_animals">
-			<de>Tiere</de>	
-			<en>Animals</en>
-			<fr>Types de remplissage disponibles</fr>
-			<it>Tipi di riempimento disponibili</it>
-			<ru>Доступные типы наполнения</ru>
-		</text>
 		<text name="ui_AvailableTypesDlg_sectionTitle_notUseable">
 			<de>Nicht verwendbar</de>	
 			<en>Not Useable</en>
+			<fr>Types de remplissage disponibles</fr>
+			<it>Tipi di riempimento disponibili</it>
+			<ru>Доступные типы наполнения</ru>
+		</text>
+
+		<text name="ui_AvailableTypesDlg_sectionTitle_Basic Crops">
+			<de>Basis Früchte</de>	
+			<en>Basic Crops</en>
+			<fr>Récoltes de base</fr>
+			<it>Colture di base</it>
+			<ru>Основные культуры</ru>
+		</text>
+		<text name="ui_AvailableTypesDlg_sectionTitle_Productions easy">
+			<de>Einfache Produktionen</de>	
+			<en>Easy Productions</en>
+			<fr>Productions faciles</fr>
+			<it>Produzioni Facili</it>
+			<ru>Простые производства</ru>
+
+		</text>
+		<text name="ui_AvailableTypesDlg_sectionTitle_Windrowed, Silaged, Chopped">
+			<de>Schwaden, Silage, Häckselgut</de>	
+			<en>Windrowed, Silaged, Chopped</en>
+			<fr>Andainé, Ensilé, Haché</fr>
+			<it>Andanato, Insilato, Tritato</it>
+			<ru>Валок, Силос, Измельчённый</ru>
+		</text>
+		<text name="ui_AvailableTypesDlg_sectionTitle_Production">
+			<de>Produktionen</de>	
+			<en>Productions</en>
+			<fr>Productions</fr>
+			<it>Produzioni</it>
+			<ru>Производства</ru>
+		</text>
+		<text name="ui_AvailableTypesDlg_sectionTitle_Animals">
+			<de>Tiere</de>	
+			<en>Animals</en>
 			<fr>Types de remplissage disponibles</fr>
 			<it>Tipi di riempimento disponibili</it>
 			<ru>Доступные типы наполнения</ru>
