@@ -3,23 +3,23 @@
 	<version>1.0.0.0</version>
 	<title>
 		<en>VIP Order Manager</en>
-		<de>VIP Auftrags Manager</de>
+		<de>VIP-Auftragsmanager</de>
 		<fr>Gestionnaire De Commandes VIP</fr>
 		<ru>Менеджер VIP-заказов</ru>
     </title>
     <description>
-        <de><![CDATA[Der VIP Order Manager bietet dem Landwirt VIP Aufträge an, die aus mehreren zu liefernden Produkten bestehen. 
-Pro Produkt mit expliziter Vorgabe der zu liefernden Menge und des Zielortes. Zusätzlich zum aktuellen VIP Auftrag kann man auch bereits die nächsten folgenden VIP Aufträge sehen.
+        <de><![CDATA[Der VIP-Auftragsmanager bietet dem Landwirt VIP-Aufträge an, die aus mehreren zu liefernden Produkten bestehen. 
+Pro Produkt mit expliziter Vorgabe der zu liefernden Menge und des Zielortes. Zusätzlich zum aktuellen VIP-Auftrag kann man auch bereits die nächsten folgenden VIP-Aufträge sehen.
 Es kann aber nur der aktuelle Auftrag beliefert werden.
 Auch Tier-Aufträge werden generiert. Hierbei ist zu beachten, dass die Lieferung automatisch erfolgt. Es wird stündlich überprüft, ob Tiere mit mindestens dem angeforderten Alter existieren und diese mindestens eine Gesundheit von 75% haben.
 
-Mit STRG rechts + O wird der aktuelle Auftrag für einige Sekunden eingeblendet. Mit ALT rechts + O wird die Übersicht über alle VIP Aufträge angezeigt.
-In dieser Ansicht kann man auch den aktuellen VIP Auftrag gegen eine Gebühr, für die noch nicht erfüllten Teilaufträge, abbrechen.
+Mit STRG rechts + O wird der aktuelle Auftrag für einige Sekunden eingeblendet. Mit ALT rechts + O wird die Übersicht über alle VIP-Aufträge angezeigt.
+In dieser Ansicht kann man auch den aktuellen VIP-Auftrag gegen eine Gebühr, für die noch nicht erfüllten Teilaufträge, abbrechen.
 
-Mit jedem VIP Auftrag wird der aktuelle Level erhöht und damit auch die Anzahl der enthaltenen Einzelaufträge und die zu liefernden Mengen erhöht und die Erlöse verringert. 
+Mit jedem VIP-Auftrag wird das aktuelle Level erhöht und damit auch die Anzahl der enthaltenen Einzelaufträge und die zu liefernden Mengen erhöht und die Erlöse verringert. 
 Auch die im Besitz befindliche Fläche wird bei der Berechnung berücksichtigt. Mit steigendem Level werden auch weitere Produkte berücksichtigt. 
 
-Bereits mit dem LS19 hatte ich angefangen den VIP Order Manager zu entwickeln, um so etwas wie Kampagnen abzubilden. Ich wollte das Spiel etwas interessanter gestalten, 
+Bereits mit dem LS19 hatte ich angefangen den VIP-Auftragsmanager zu entwickeln, um so etwas wie Kampagnen abzubilden. Ich wollte das Spiel etwas interessanter gestalten, 
 in dem mir vorgegeben wird, was ich anbauen muss.
 
 Multiplayer wird derzeit nicht unterstützt. 
@@ -128,7 +128,7 @@ Per eventuali messaggi di errore o suggerimenti, visitare: https://github.com/Fe
   	</inputBinding>	
 	<l10n>
 		<text name="input_ShowCurrentVIPOrder">
-			<de>Durchblättern VIP Aufträge</de>
+			<de>Durchblättern VIP-Aufträge</de>
 			<en>Flip VIP Orders</en>
 			<fr>Inverser les commandes VIP</fr>
 			<it>Vedi Ordini VIP correnti</it>
@@ -144,7 +144,7 @@ Per eventuali messaggi di errore o suggerimenti, visitare: https://github.com/Fe
 
 	<!-- Abort Dlg -->
 		<text name="VIPOrderManager_DlgTitel_AbortCurrentVIPOrder">
-			<de>Abbruch des aktuellen VIP Auftrag</de>
+			<de>Abbruch des aktuellen VIP-Auftrags</de>
 			<en>Aborting current VIP Orders</en>
 			<fr>Annulation des commandes VIP en cours</fr>
 			<it>Annulla gli Ordini VIP correnti</it>
@@ -160,14 +160,14 @@ Per eventuali messaggi di errore o suggerimenti, visitare: https://github.com/Fe
 
 	<!-- HUD -->
 		<text name="VIPOrderManager_CurrentVIPOrder">
-			<de>Aktueller VIP Auftrag</de>
+			<de>Aktueller VIP-Auftrag</de>
 			<en>Current VIP Order</en>
 			<fr>Commande VIP en cours</fr>
 			<it>Ordine VIP corrente</it>
 			<ru>Текущий VIP-заказ</ru>
 		</text>
 		<text name="VIPOrderManager_NextVIPOrder">
-			<de>Nächster VIP Auftrag</de>
+			<de>Nächster VIP-Auftrag</de>
 			<en>Next VIP Order</en>
 			<fr>Prochaine commande VIP</fr>
 			<it>Prossimo Ordine VIP</it>
@@ -274,7 +274,7 @@ Per eventuali messaggi di errore o suggerimenti, visitare: https://github.com/Fe
 			<ru>Закрыть</ru>
 		</text>		
         <text name="ui_orderDlg_btnAbort">
-			<de>Abbruch des aktuellen VIP Auftrags</de>	
+			<de>Abbruch des aktuellen VIP-Auftrags</de>	
 			<en>Abort current VIP Order</en>
 			<fr>Annuler la commande VIP en cours</fr>
 			<it>Annulla l'Ordine VIP corrente</it>
@@ -344,7 +344,7 @@ Per eventuali messaggi di errore o suggerimenti, visitare: https://github.com/Fe
 			<ru>Вероятность</ru>
 		</text>
 		<text name="ui_AvaliableTypesDlg_title_msg">
-			<de>Internere Logik Kommentare</de>
+			<de>Interne Logik-Kommentare</de>
 			<en>Internal Logic Comments</en>
 			<fr>Commentaires de logique interne</fr>
 			<it>Commenti alla logica interna</it>
