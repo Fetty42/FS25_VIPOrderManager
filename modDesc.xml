@@ -1,4 +1,4 @@
-<modDesc descVersion="96">
+<modDesc descVersion="103">
 	<author>Fetty42</author>
 	<version>1.0.0.0</version>
 	<title>
@@ -24,6 +24,11 @@ in dem mir vorgegeben wird, was ich anbauen muss.
 
 Multiplayer wird derzeit nicht unterstützt. 
 
+Update 1.1.0:
+- Probleme mit FillType Convertern in Produktionen behoben (z.B. BGA)
+- Kompatibilitätsprobleme mit dem "Animal Package Vanilla Edition" behoben
+- Spielbalance optimiert
+
 Ich möchte auch noch all den anderen Moddern danken, aus deren Mods ich mir im Laufe der Zeit viele Anregungen und Lösungsansätze holen konnte.
 
 Für Fehlermeldungen oder Anregungen besucht bitte: https://github.com/Fetty42/FS25_VIPOrderManager/issues oder https://forum.giants-software.com/viewtopic.php?t=208708]]></de>
@@ -43,6 +48,11 @@ Already with FS19, I had started to develop the VIP Order Manager to represent s
 by telling me what I have to grow.
 
 Multiplayer is currently not supported. 
+
+Update 1.1.0:
+- Fixed issues with FillType converters in productions (e.g. BGA)
+- Fixed compatibility issues with the "Animal Package Vanilla Edition"
+- Optimized game balance
 
 I would also like to thank all the other modders whose mods have given me many ideas and solutions over the time.
 
@@ -64,6 +74,11 @@ en me donnant des indications sur ce que je dois cultiver.
 
 Je n'ai pas testé la compatibilité multijoueur.
 
+Update 1.1.0:
+- Problèmes avec les convertisseurs FillType dans les productions corrigés (par ex. BGA)
+- Problèmes de compatibilité avec le "Animal Package Vanilla Edition" corrigés
+- Équilibrage du jeu optimisé
+
 Je voudrais aussi remercier tous les autres moddeurs, dont les mods m'ont donné beaucoup d'idées et de solutions au fil du temps.
 
 Pour les messages d'erreur ou les suggestions, veuillez visiter : https://github.com/Fetty42/FS25_VIPOrderManager/issues ou https://forum.giants-software.com/viewtopic.php?t=208708]]></fr>
@@ -84,6 +99,11 @@ dicendomi cosa devo coltivare.
 
 Le multijoueur n'est pas pris en charge pour le moment. 
 
+Update 1.1.0:
+- Risolti problemi con i convertitori FillType nelle produzioni (es. BGA)
+- Risolti problemi di compatibilità con il "Pacchetto Animali Vanilla Edition"
+- Ottimizzato il bilanciamento del gioco
+
 Vorrei anche ringraziare tutti gli altri modder le cui mod mi hanno dato molte idee e soluzioni nel tempo.
 
 Per eventuali messaggi di errore o suggerimenti, visitare: https://github.com/Fetty42/FS25_VIPOrderManager/issues o https://forum.giants-software.com/viewtopic.php?t=208708]]></it>
@@ -102,6 +122,11 @@ Per eventuali messaggi di errore o suggerimenti, visitare: https://github.com/Fe
 Уже с FS19 я начал разрабатывать менеджера VIP-заказов, чтобы представлять что-то вроде кампаний. Я хотел сделать игру немного более интересной, намекая мне, что я должен расти.
 
 Многопользовательская игра в настоящее время не поддерживается. 
+
+Update 1.1.0:
+- Исправлены проблемы с конвертерами FillType в производствах (например, BGA)
+- Исправлены проблемы совместимости с "Animal Package Vanilla Edition"
+- Оптимизирован баланс игры
 
 Я также хотел бы поблагодарить всех мододелов, чьи моды за это время дали мне много идей и решений.
 

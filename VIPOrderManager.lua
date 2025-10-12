@@ -26,7 +26,7 @@ end
 local function dbPrintHeader(funcName)
 	if dbPrintfOn then
 		if g_currentMission ~=nil and g_currentMission.missionDynamicInfo ~=nil then
-			print(string.format("Call %s: isDedicatedServer=%s | isServer()=%s | isMasterUser=%s | isMultiplayer=%s | isClient()=%s | farmId=%s", 
+			print(string.format("Call %s: isDedicatedServer=%s | isServer()=%s | isMasterUser=%s | isMultiplayer=%s | isClient()=%s | farmId=%s",
 							funcName, tostring(g_dedicatedServer~=nil), tostring(g_currentMission:getIsServer()), tostring(g_currentMission.isMasterUser), tostring(g_currentMission.missionDynamicInfo.isMultiplayer), tostring(g_currentMission:getIsClient()), tostring(g_currentMission:getFarmId())))
 		else
 			print(string.format("Call %s: isDedicatedServer=%s | g_currentMission=%s",
@@ -95,7 +95,8 @@ function VIPOrderManager:loadMap(name)
 		FSBaseMission.onFinishedLoading = Utils.appendedFunction(FSBaseMission.onFinishedLoading, VIPOrderManager.loadSettings);
 		--VIPOrderManager:loadSettings();
 
-		SellingStation.addFillLevelFromTool = Utils.overwrittenFunction(SellingStation.addFillLevelFromTool, VIPOrderManager.sellingStation_addFillLevelFromTool)	
+		SellingStation.addFillLevelFromTool = Utils.overwrittenFunction(SellingStation.addFillLevelFromTool, VIPOrderManager.sellingStation_addFillLevelFromTool)
+		UnloadTrigger.addFillUnitFillLevel = Utils.overwrittenFunction(UnloadTrigger.addFillUnitFillLevel, VIPOrderManager.unloadTrigger_addFillUnitFillLevel)
 
 		g_messageCenter:subscribe(MessageType.HOUR_CHANGED, self.onHourChanged, self)
 	end
@@ -492,18 +493,37 @@ function VIPOrderManager:calculateAndFillOrder(VIPOrder, orderLevel)
 		i = i + 1
 		dbPrintf(string.format("  %s. Order Item:", i))
 
-		-- dice group name
 		local groupNameSetting = nil
-		repeat
-			local isNextTryForGroup = false
-			groupNameSetting = VIPOrderManager.groupNameSettings[math.random(1, #VIPOrderManager.groupNameSettings)]
 
-			local random = math.random() * 100
-			isNextTryForGroup = random > groupNameSetting.probability
+		-- dice group name
+		-- repeat
+		-- 	local isNextTryForGroup = false
+		-- 	groupNameSetting = VIPOrderManager.groupNameSettings[math.random(1, #VIPOrderManager.groupNameSettings)]
+
+		-- 	local random = math.random() * 100
+		-- 	isNextTryForGroup = random > groupNameSetting.probability
 	
-		until(not isNextTryForGroup)
+		-- until(not isNextTryForGroup)
+		-- print(string.format("  - old diced groupNameSetting: %s (probability=%s)", groupNameSetting.groupName, groupNameSetting.probability))
 
-		dbPrintf("  - diced group: %s", groupNameSetting.groupName)
+		--new dice group name
+		local totalProbability = 0
+		for i = 1, #VIPOrderManager.groupNameSettings do
+			totalProbability = totalProbability + (VIPOrderManager.groupNameSettings[i].probability or 0)
+		end
+		-- print(string.format("  - Sum of groupNameSettings probabilities: %s", totalProbability))
+
+		local random = math.random(totalProbability)
+		local localTotalProbability = 0
+		groupNameSetting = nil
+		for i = 1, #VIPOrderManager.groupNameSettings do
+			localTotalProbability = localTotalProbability + (VIPOrderManager.groupNameSettings[i].probability or 0)
+			if random <= localTotalProbability then
+				groupNameSetting = VIPOrderManager.groupNameSettings[i]
+				break
+			end
+		end
+		-- print(string.format("  - new diced groupNameSetting: %s (probability=%s)", groupNameSetting.groupName, groupNameSetting.probability))
 
 
 		-- dice fill type
@@ -698,7 +718,8 @@ end
 
 
 function VIPOrderManager:getRandomNeededAgeInMonth(fillTypeName)
-	local animalSubType = g_currentMission.animalSystem.nameToSubType[fillTypeName]
+	local fillTypeIdx = g_fillTypeManager:getFillTypeIndexByName(fillTypeName)
+    local animalSubType = g_currentMission.animalSystem.fillTypeIndexToSubType[fillTypeIdx]
 	local maxMinAge = animalSubType.visuals[#animalSubType.visuals].minAge
 
 	local desiredDiff = math.random(VIPOrderManager.rangeAnimalAgeDifInMonths.min, VIPOrderManager.rangeAnimalAgeDifInMonths.max)
@@ -1436,13 +1457,15 @@ end
 
 function VIPOrderManager:GetAnimalTitleByFillTypeIdx(fillTypeIdx, neededAgeInMonths)
 	local animalFillType = g_fillTypeManager:getFillTypeByIndex(fillTypeIdx)
-    local animalSubType = g_currentMission.animalSystem.fillTypeIndexToSubType[fillTypeIdx]
 	local animalStoreTitle = animalFillType.title
 	local animalAge = neededAgeInMonths == nil and 0 or neededAgeInMonths
 	
-	for i, visual in pairs(animalSubType.visuals) do
-		if animalAge >= visual.minAge and visual.store.name ~= nil then
-			animalStoreTitle = visual.store.name
+    local animalSubType = g_currentMission.animalSystem.fillTypeIndexToSubType[fillTypeIdx]
+	if animalSubType ~= nil then
+		for i, visual in pairs(animalSubType.visuals) do
+			if animalAge >= visual.minAge and visual.store.name ~= nil then
+				animalStoreTitle = visual.store.name
+			end
 		end
 	end
 
@@ -1483,6 +1506,47 @@ function VIPOrderManager.sellingStation_addFillLevelFromTool(station, superFunc,
 
     return moved
 end
+
+---Increase fill level
+-- @param integer fillUnitIndex
+-- @param float fillLevelDelta
+-- @param integer fillTypeIndex
+-- @param table toolType
+-- @param table fillPositionData
+-- @return float addedAmount
+function VIPOrderManager.unloadTrigger_addFillUnitFillLevel(station, superFunc, farmId, fillUnitIndex, fillLevelDelta, fillTypeIndex, toolType, fillPositionData, extraAttributes)
+    dbPrintHeader("VIPOrderManager:unloadTrigger_addFillUnitFillLevel()")
+
+	local applied = 0
+	applied = superFunc(station, farmId, fillUnitIndex, fillLevelDelta, fillTypeIndex, toolType, fillPositionData, extraAttributes)
+    -- local applied = self.target:addFillLevelFromTool(farmId, fillLevelDelta, fillTypeIndex, fillPositionData, toolType, extraAttributes or self.extraAttributes)
+	
+	-- Own code
+	local ft = g_fillTypeManager:getFillTypeByIndex(fillTypeIndex)
+	local stationCategoryName = ""
+	if station.target.owningPlaceable ~= nil and station.target.owningPlaceable.storeItem ~= nil then
+		stationCategoryName = station.target.owningPlaceable.storeItem.categoryName
+	end
+	-- dbPrintf("  stationCategoryName=%s | applied=%s | fillLevelDelta=%s | ftName=%s (%s) | ftIndex=%s | toolType=%s", tostring(stationCategoryName), tostring(applied), tostring(fillLevelDelta), ft.name, ft.title, tostring(fillTypeIndex), tostring(toolType))
+
+ 	if applied > 0 and VIPOrderManager.VIPOrders ~= nil and VIPOrderManager.VIPOrders[1] ~= nil then
+        local orderEntry = VIPOrderManager.VIPOrders[1].entries[ft.name]
+        -- dbPrintf("  Anzahl Order Items=%s", TyTools:getCountElements(VIPOrderManager.currentVIPOrder))
+		if orderEntry ~= nil then
+			if orderEntry.targetStation == nil or orderEntry.targetStation == station.target then
+				orderEntry.fillLevel = math.min(orderEntry.fillLevel + applied, orderEntry.quantity)
+				VIPOrderManager.showVIPOrder = 1;
+				VIPOrderManager.infoDisplayPastTime = 0
+				VIPOrderManager:UpdateOutputLines()
+			end
+		end
+	end
+-- end own code
+
+    return applied
+end
+
+
 
 
 function VIPOrderManager:isTerraLife()

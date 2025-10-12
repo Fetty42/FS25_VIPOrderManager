@@ -37,11 +37,11 @@ VIPOrderManager.limitedGroupsPercent = {} -- Max share of limited groups
 VIPOrderManager.numPrioTrysForGroup = 100
 
 VIPOrderManager.groupNameSettings = {}
-table.insert(VIPOrderManager.groupNameSettings, {groupName="Basic Crops", 					sectionOrder=1, probability=55})
-table.insert(VIPOrderManager.groupNameSettings, {groupName="Windrowed, Silaged, Chopped", 	sectionOrder=2, probability=25})
-table.insert(VIPOrderManager.groupNameSettings, {groupName="Animals", 						sectionOrder=3, probability=65})
-table.insert(VIPOrderManager.groupNameSettings, {groupName="Productions easy", 				sectionOrder=4, probability=25})
-table.insert(VIPOrderManager.groupNameSettings, {groupName="Production", 					sectionOrder=5, probability=20})
+table.insert(VIPOrderManager.groupNameSettings, {groupName="Basic Crops", 					sectionOrder=1, probability=65})
+table.insert(VIPOrderManager.groupNameSettings, {groupName="Windrowed, Silaged, Chopped", 	sectionOrder=2, probability=40})
+table.insert(VIPOrderManager.groupNameSettings, {groupName="Animals", 						sectionOrder=3, probability=30})
+table.insert(VIPOrderManager.groupNameSettings, {groupName="Productions easy", 				sectionOrder=4, probability=35})
+table.insert(VIPOrderManager.groupNameSettings, {groupName="Production", 					sectionOrder=5, probability=15})
 
 
 -- overwrite group name which comes from the ftConfig defaults
@@ -69,72 +69,68 @@ VIPOrderManager.ftConfigs =
 	-- defaults
 	DEFAULT_FRUITTYPE	= {groupName="Basic Crops", isUnknown=true, isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=0.5, probability={30}},					-- for unknown fruittypes
 	DEFAULT_FILLTYPE	= {groupName="Production", isUnknown=true, isAllowed=true, minOrderLevel={5,4,2}, quantityCorrectionFactor=1.0, probability={2, 5, 15}},		-- for unknown filltypes (booster possible)
-	DEFAULT_ANIMALTYPE	= {groupName="Animals", isUnknown=true, isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=2.0, probability={40, 60, 70}},			-- for unknown animals (booster possible)
+	DEFAULT_ANIMALTYPE	= {groupName="Animals", isUnknown=true, isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=2.0, probability={30, 40, 50}},			-- for unknown animals (booster possible)
+
+	-- Basic Cropss (incl. Premium Expansion)
+	BARLEY 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={1}, quantityCorrectionFactor=1.0, probability={40}},		-- Gerste
+	WHEAT 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={1}, quantityCorrectionFactor=1.0, probability={40}},		-- Weizen
+	OAT 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={1}, quantityCorrectionFactor=1.0, probability={40}},		-- Hafer
+	CANOLA 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={1}, quantityCorrectionFactor=1.0, probability={40}},		-- Raps
+	SORGHUM 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={1}, quantityCorrectionFactor=1.0, probability={40}},		-- Sorghumhirse
+	SOYBEAN 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={1}, quantityCorrectionFactor=1.0, probability={40}},		-- Sojabohnen
+	SUNFLOWER 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={2}, quantityCorrectionFactor=1.0, probability={40}},		-- Sonnenblumen
+	MAIZE 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={2}, quantityCorrectionFactor=1.0, probability={40}},		-- Mais
+	SUGARBEET 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={30}},		-- Zuckerrüben
+	POTATO 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={30}},		-- Kartoffeln
+	OLIVE 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={4}, quantityCorrectionFactor=1.0, probability={20}},		-- Oliven
+	GRAPE 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={4}, quantityCorrectionFactor=1.0, probability={20}},		-- Trauben
+	COTTON 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={5}, quantityCorrectionFactor=1.0, probability={25}},		-- Baumwolle
+	SUGARCANE 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={5}, quantityCorrectionFactor=1.0, probability={25}},		-- Zuckerrohr
+	
+	GREENBEAN 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={15}},		-- Buschbohnen
+	RICELONGGRAIN 		= {groupName="Basic Crops", isAllowed=true, minOrderLevel={1}, quantityCorrectionFactor=1.0, probability={20}},		-- Langkornreis
+	SPINACH 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={15}},		-- Spinat
+	PEA 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={15}},		-- Erbsen
+	RICE 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={20}},		-- Reis
+	PARSNIP 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={20}},		-- Pastinaken
+	BEETROOT 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={20}},		-- Rote Bete
+	CARROT 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={20}},		-- Karotten
 
 	-- standard animals (booster possible)
-	ANIMALTYPE_CHICKEN	= {groupName="Animals", isAllowed=true, minOrderLevel={2,1,1}, quantityCorrectionFactor=3.0, probability={30, 40, 50}, quantityCorrectionFactorMaizePlus=1.5},
-	ANIMALTYPE_SHEEP	= {groupName="Animals", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=3.5, probability={30, 35, 50}, quantityCorrectionFactorMaizePlus=1.5},
-	ANIMALTYPE_COW		= {groupName="Animals", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=2.0, probability={20, 30, 50}, quantityCorrectionFactorMaizePlus=1.0},
-	ANIMALTYPE_PIG		= {groupName="Animals", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=5.0, probability={20, 30, 50}, quantityCorrectionFactorMaizePlus=2.5},
+	ANIMALTYPE_CHICKEN	= {groupName="Animals", isAllowed=true, minOrderLevel={2,1,1}, quantityCorrectionFactor=2.0, probability={30, 40, 50}, quantityCorrectionFactorMaizePlus=1.5},
+	ANIMALTYPE_SHEEP	= {groupName="Animals", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=2.5, probability={30, 35, 50}, quantityCorrectionFactorMaizePlus=1.5},
+	ANIMALTYPE_COW		= {groupName="Animals", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=1.5, probability={20, 30, 50}, quantityCorrectionFactorMaizePlus=1.0},
+	ANIMALTYPE_PIG		= {groupName="Animals", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=3.5, probability={20, 30, 50}, quantityCorrectionFactorMaizePlus=2.5},
 	ANIMALTYPE_HORSE	= {groupName="Animals", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=0.7, probability={20, 30, 50}, quantityCorrectionFactorMaizePlus=0.7},
 
 	-- other animals (booster possible)
-	-- ANIMALTYPE_BULL		= {groupName="Animals", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=0.4, probability={5, 7, 20}},		-- Hof Bergmann
-	-- ANIMALTYPE_CAT		= {groupName="Animals", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=0.2, probability={5, 7, 10}},		-- Hof Bergmann
 	-- ANIMALTYPE_RABBIT	= {groupName="Animals", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=1.0, probability={10, 15, 30}},		-- Hof Bergmann
-	-- ANIMALTYPE_PULLET	= {groupName="Animals", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=2.0, probability={20, 30, 50}},		-- Hof Bergmann
-	-- ANIMALTYPE_GOAT		= {groupName="Animals", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=2.0, probability={30, 35, 50}, quantityCorrectionFactorMaizePlus=1.5},		-- TerraLifePlus
 
 	-- Animal products (booster possible)
-	HONEY 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={2}, quantityCorrectionFactor=0.3, probability={25}},				-- Honig
-	EGG 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={2,1,1}, quantityCorrectionFactor=0.7, probability={15, 20, 25}},	-- Eier
-	WOOL 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.7, probability={15, 17, 25}},	-- Wolle
-	MILK 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=1.0, probability={10, 15, 25}},	-- Milch
-	BUFFALOMILK			= {groupName="Productions easy", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=1.0, probability={10, 15, 25}},	-- Büffelmilch
-	GOATMILK 			= {groupName="Productions easy", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=1.0, probability={10, 15, 25}},	-- Ziegenmilch
-	LIQUIDMANURE 		= {groupName="Productions easy", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=0.1, probability={10, 15, 25}},	-- Gülle
-	MANURE 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=0.1, probability={10, 15, 25}},	-- Mist
-
-	-- Basic Cropss (incl. Premium Expansion)
-	BARLEY 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={1}, quantityCorrectionFactor=1.0, probability={30}},		-- Gerste
-	WHEAT 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={1}, quantityCorrectionFactor=1.0, probability={30}},		-- Weizen
-	OAT 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={1}, quantityCorrectionFactor=1.0, probability={30}},		-- Hafer
-	CANOLA 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={1}, quantityCorrectionFactor=1.0, probability={30}},		-- Raps
-	SORGHUM 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={1}, quantityCorrectionFactor=1.0, probability={30}},		-- Sorghumhirse
-	SOYBEAN 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={1}, quantityCorrectionFactor=1.0, probability={30}},		-- Sojabohnen
-	SUNFLOWER 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={2}, quantityCorrectionFactor=1.0, probability={30}},		-- Sonnenblumen
-	MAIZE 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={2}, quantityCorrectionFactor=1.0, probability={30}},		-- Mais
-	SUGARBEET 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={30}},		-- Zuckerrüben
-	POTATO 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={30}},		-- Kartoffeln
-	OLIVE 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={4}, quantityCorrectionFactor=1.0, probability={30}},		-- Oliven
-	GRAPE 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={4}, quantityCorrectionFactor=1.0, probability={30}},		-- Trauben
-	COTTON 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={5}, quantityCorrectionFactor=1.0, probability={30}},		-- Baumwolle
-	SUGARCANE 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={5}, quantityCorrectionFactor=1.0, probability={30}},		-- Zuckerrohr
-	
-	GREENBEAN 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={30}},		-- Buschbohnen
-	RICELONGGRAIN 		= {groupName="Basic Crops", isAllowed=true, minOrderLevel={1}, quantityCorrectionFactor=1.0, probability={30}},		-- Langkornreis
-	SPINACH 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={30}},		-- Spinat
-	PEA 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={30}},		-- Erbsen
-	RICE 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={30}},		-- Reis
-	PARSNIP 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={30}},		-- Pastinaken
-	BEETROOT 			= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={30}},		-- Rote Bete
-	CARROT 				= {groupName="Basic Crops", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={30}},		-- Karotten
+	HONEY 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={2}, quantityCorrectionFactor=0.3, probability={45}},				-- Honig
+	EGG 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={2,1,1}, quantityCorrectionFactor=0.7, probability={25, 35, 45}},	-- Eier
+	WOOL 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.7, probability={20, 35, 45}},	-- Wolle
+	GOATMILK 			= {groupName="Productions easy", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=1.0, probability={20, 35, 45}},	-- Ziegenmilch
+	MILK 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=1.0, probability={15, 25, 45}},	-- Milch
+	BUFFALOMILK			= {groupName="Productions easy", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=1.0, probability={15, 25, 45}},	-- Büffelmilch
+	LIQUIDMANURE 		= {groupName="Productions easy", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=0.1, probability={10, 15, 30}},	-- Gülle
+	MANURE 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={4,3,2}, quantityCorrectionFactor=0.1, probability={10, 15, 30}},	-- Mist
 
 	-- Tree products
 	WOOD 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={2}, quantityCorrectionFactor=2.0, probability={30}},		-- Holz
 	WOODCHIPS 			= {groupName="Productions easy", isAllowed=true, minOrderLevel={2}, quantityCorrectionFactor=0.8, probability={30}},		-- Hackschnitzel
 
 	-- Greenhouse products (booster possible)
-	STRAWBERRY 			= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={15, 20, 30}},		-- Erdbeeren
-	TOMATO 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={15, 20, 30}},		-- Tomaten
-	LETTUCE 			= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={15, 20, 30}},		-- Salat
-	GARLIC 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={15, 20, 30}},		-- Knoblauch
-	OYSTER 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={15, 20, 30}},		-- Austernpilze
-	ENOKI 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={15, 20, 30}},		-- Enoki Pilze
-	RICESAPLINGS 		= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={15, 20, 30}},		-- Reis Setzlinge
-	CHILLI 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={15, 20, 30}},		-- Chillischoten
-	NAPACABBAGE 		= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={15, 20, 30}},		-- Chinakohl
-	SPRING_ONION 		= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={15, 20, 30}},		-- Frühlingslauch
+	STRAWBERRY 			= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={10, 15, 20}},		-- Erdbeeren
+	TOMATO 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={10, 15, 20}},		-- Tomaten
+	LETTUCE 			= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={10, 15, 20}},		-- Salat
+	GARLIC 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={10, 15, 20}},		-- Knoblauch
+	OYSTER 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={10, 15, 20}},		-- Austernpilze
+	ENOKI 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={10, 15, 20}},		-- Enoki Pilze
+	RICESAPLINGS 		= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={10, 15, 20}},		-- Reis Setzlinge
+	CHILLI 				= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={10, 15, 20}},		-- Chillischoten
+	NAPACABBAGE 		= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={10, 15, 20}},		-- Chinakohl
+	SPRING_ONION 		= {groupName="Productions easy", isAllowed=true, minOrderLevel={3,2,1}, quantityCorrectionFactor=0.8, probability={10, 15, 20}},		-- Frühlingslauch
 
 	-- Factory products
 	SEEDS				= {groupName="Productions easy", isAllowed=true, minOrderLevel={3}, quantityCorrectionFactor=1.0, probability={0, 20, 20}},		-- Samen
