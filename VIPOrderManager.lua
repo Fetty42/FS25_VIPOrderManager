@@ -1,8 +1,8 @@
 -- Author: Fetty42
 -- Date: 12.10.2025
 
-local dbPrintfOn = true
-local dbInfoPrintfOn = true
+local dbPrintfOn = false
+local dbInfoPrintfOn = false
 
 local function dbInfoPrintf(...)
 	if dbInfoPrintfOn then
