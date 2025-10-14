@@ -1,9 +1,8 @@
 -- Author: Fetty42
--- Date: 08.12.2024
--- Version: 1.0.0.0
+-- Date: 12.10.2025
 
-local dbPrintfOn = false
-local dbInfoPrintfOn = false
+local dbPrintfOn = true
+local dbInfoPrintfOn = true
 
 local function dbInfoPrintf(...)
 	if dbInfoPrintfOn then
@@ -75,10 +74,14 @@ VIPOrderManager.infoOverlayBackground = g_currentModDirectory.."OverlayBackgroun
 VIPOrderManager.infoOverlay			= nil	-- Overlay for the info display
 VIPOrderManager.OrderDlg			= nil
 
-VIPOrderManager.successSound = createSample("success")
-loadSample(VIPOrderManager.successSound, "data/sounds/ui/uiSuccess.ogg", false)
-VIPOrderManager.failSound = createSample("fail")
-loadSample(VIPOrderManager.failSound, "data/sounds/ui/uiFail.ogg", false)
+VIPOrderManager.uiSuccessSound = createSample("uiSuccess")
+loadSample(VIPOrderManager.uiSuccessSound, "data/sounds/ui/uiSuccess.ogg", false)
+VIPOrderManager.uiFailSound = createSample("uiFail")
+loadSample(VIPOrderManager.uiFailSound, "data/sounds/ui/uiFail.ogg", false)
+VIPOrderManager.uiTransactionSound = createSample("uiTransaction")
+loadSample(VIPOrderManager.uiTransactionSound, "data/sounds/ui/uiTransaction.ogg", false)
+VIPOrderManager.uiNotificationSound = createSample("uiNotification")
+loadSample(VIPOrderManager.uiNotificationSound, "data/sounds/ui/uiNotification.ogg", false)
 
 
 
@@ -145,16 +148,23 @@ function VIPOrderManager:onHourChanged(hour)
 				dbPrintf("  - husbandry placeables:  Name=%s | AnimalType=%s | NumOfAnimals=%s | getNumOfClusters=%s", placeableName, husbandry.animalTypeName, placeable:getNumOfAnimals(), placeable:getNumOfClusters())
 
 				for idx, cluster in ipairs(placeable:getClusters()) do
-					dbPrintf("    - Cluster:  numAnimals=%s | age=%s | health=%s | subTypeName=%s | subTypeTitle=%s"
-					, cluster.numAnimals, cluster.age, cluster.health, g_currentMission.animalSystem.subTypes[cluster.subTypeIndex].name, g_currentMission.animalSystem.subTypes[cluster.subTypeIndex].visuals[1].store.name)
+                    local animalSubType = g_currentMission.animalSystem.subTypes[cluster.subTypeIndex]
+                    local animalFillType = g_fillTypeManager:getFillTypeByIndex(animalSubType.fillTypeIndex)
+                    local animalTitle = animalFillType.title
+                    local animalName = animalFillType.name
+                    if animalSubType ~= nil then
+                        if animalSubType.visuals ~= nil and animalSubType.visuals[1] ~= nil and animalSubType.visuals[1].store ~= nil and animalSubType.visuals[1].store.name ~= nil then
+                            animalTitle = animalSubType.visuals[1].store.name
+                        end
+                    end
+                    dbPrintf("    - Cluster:  numAnimals=%s | age=%s | health=%s | subTypeName=%s | subTypeTitle=%s", cluster.numAnimals, cluster.age, cluster.health, animalName, animalTitle)
 
-					local orderEntry = currentVipOrder.entries[g_currentMission.animalSystem.subTypes[cluster.subTypeIndex].name]
+					local orderEntry = currentVipOrder.entries[animalName]
 					if orderEntry ~= nil then
                         dbPrintf("    --> fitting order entry exists with:  quantity=%s | fillLevel=%s | neededAgeInMonths=%s", orderEntry.quantity, orderEntry.fillLevel, orderEntry.neededAgeInMonths)
-						if cluster.age >= orderEntry.neededAgeInMonths and cluster.health >= 75 then
-							local numAninmalsToSell = math.min(orderEntry.quantity - orderEntry.fillLevel, cluster.numAnimals)
-
-							if numAninmalsToSell > 0 then
+						local numAninmalsToSell = math.min(orderEntry.quantity - orderEntry.fillLevel, cluster.numAnimals)
+						if cluster.age >= orderEntry.neededAgeInMonths and numAninmalsToSell > 0 then
+                            if cluster.health >= 75 then
 								local sellPrice = cluster:getSellPrice() * numAninmalsToSell
 								
 								cluster.numAnimals = cluster.numAnimals - numAninmalsToSell
@@ -165,15 +175,21 @@ function VIPOrderManager:onHourChanged(hour)
 								end
 
 								local msgTxt = string.format(g_i18n:getText("VIPOrderManager_AnimalsDelivered"), numAninmalsToSell, orderEntry.title)
-								dbPrintf("  --> " .. msgTxt)
+								dbPrint("  --> " .. msgTxt)
 								g_currentMission:addIngameNotification(FSBaseMission.INGAME_NOTIFICATION_INFO, msgTxt)
 								g_currentMission:addMoney(sellPrice, g_currentMission:getFarmId(), MoneyType.SOLD_ANIMALS, true, true);
+								playSample(VIPOrderManager.uiTransactionSound ,1 ,1 ,1 ,0 ,0)
 
 								orderEntry.fillLevel = orderEntry.fillLevel + numAninmalsToSell
 
 								VIPOrderManager.showVIPOrder = 1;
 								VIPOrderManager.infoDisplayPastTime = 0
 								VIPOrderManager:UpdateOutputLines()
+                            else
+								local msgTxt = string.format(g_i18n:getText("VIPOrderManager_AnimalsSalesNotPossible"), animalTitle)
+								dbPrint("  --> " .. msgTxt)
+								g_currentMission:showBlinkingWarning(msgTxt, 8000)
+								playSample(VIPOrderManager.uiNotificationSound ,1 ,1 ,1 ,0 ,0)
 							end
 						end
 					end
@@ -253,7 +269,7 @@ function VIPOrderManager:reactToDialog_AbortCurrentVIPOrder(yes)
 	if yes and VIPOrderManager.VIPOrders[1] ~= nil then
 		local sumAbortFee, sumPayout = VIPOrderManager:GetSumAbortFeeAndSumPayout()
 	
-		playSample(VIPOrderManager.failSound ,1 ,1 ,1 ,0 ,0)
+		playSample(VIPOrderManager.uiFailSound ,1 ,1 ,1 ,0 ,0)
 
 		-- show message and payout
 		-- dbPrintf("  sumAbortFee=%s | sumPayout=%s", g_i18n:formatMoney(sumAbortFee, 0, true), g_i18n:formatMoney(sumPayout, 0, true))
@@ -619,9 +635,6 @@ function VIPOrderManager:calculateAndFillOrder(VIPOrder, orderLevel)
 		local orderItemNeededAgeInMonths = nil
 		if relevantFillType.isAnimal then
 			orderItemNeededAgeInMonths = VIPOrderManager:getRandomNeededAgeInMonth(relevantFillType.name)
-			--
-            -- relevantFillType.priceMax = VIPOrderManager:GetAnimalSellPriceByFillTypeIdxAndAge(g_fillTypeManager:getFillTypeIndexByName(relevantFillType.name), orderItemNeededAgeInMonths)
-			-- orderItemQuantity = math.floor(randomQuantityFaktor * 1000 / relevantFillType.priceMax * quantityCorrectionFactor)   -- keine Verwendung von SellPrice, da zu Sprunghaft!
 		end
 
 		dbPrintf("    - final quantity factor = %.2f", randomQuantityFaktor)
@@ -667,54 +680,6 @@ function VIPOrderManager:calculateAndFillOrder(VIPOrder, orderLevel)
 		end
 	end
 end
-
-
--- animalSubType.sellPrice.keyframes[]
---  [1] = verkaufspreis
---  time = ab alter
-function VIPOrderManager:GetAnimalSellPriceByFillTypeIdxAndAge(fillTypeIdx, neededAgeInMonths)
-	local animalSubType = g_currentMission.animalSystem.fillTypeIndexToSubType[fillTypeIdx]
-	local animalSellPrice = 0
-	local animalAge = neededAgeInMonths == nil and 0 or neededAgeInMonths
-	
-	for i, sellPriceKeyframe in pairs(animalSubType.sellPrice.keyframes) do
-		if animalAge >= sellPriceKeyframe.time then
-			animalSellPrice = sellPriceKeyframe[1]
-		end
-	end
-	return animalSellPrice
-end
-
--- animalSubType.input.food.keyframes[]
---  [1] = menge futter
---  time = ab alter
-function VIPOrderManager:GetAnimalFoodConsumptionPerMonthByFillTypeIdxAndAge(fillTypeIdx, neededAgeInMonths)
-	local animalSubType = g_currentMission.animalSystem.fillTypeIndexToSubType[fillTypeIdx]
-	local animalFoodConsumptionPerMonth = 0
-	local animalAge = neededAgeInMonths == nil and 0 or neededAgeInMonths
-	
-	for i, foodKeyframe in pairs(animalSubType.input.food.keyframes) do
-		if animalAge >= foodKeyframe.time then
-			animalFoodConsumptionPerMonth = foodKeyframe[1]
-		end
-	end
-	return animalFoodConsumptionPerMonth
-end
-
-
-function VIPOrderManager:GetAnimalFoodConsumptionPerMonthStringByFillTypeIdx(fillTypeIdx)
-	local animalSubType = g_currentMission.animalSystem.fillTypeIndexToSubType[fillTypeIdx]
-	local animalFoodConsumptionPerMonth = 0
-	local animalAge = neededAgeInMonths == nil and 0 or neededAgeInMonths
-	
-	local output = "Monthly Food Consumption per Age:"
-	for i, foodKeyframe in pairs(animalSubType.input.food.keyframes) do
-		local str = string.format("%s->%s | ", foodKeyframe.time, foodKeyframe[1])
-		output = output .. str
-	end
-	return output
-end
-
 
 
 function VIPOrderManager:getRandomNeededAgeInMonth(fillTypeName)
@@ -811,7 +776,7 @@ function VIPOrderManager:GetFillTypeConfig(possibleFT)
 			else
 				msg = string.format("Reduced 'Min. Level' as animal husbandry is owned: %s --> %s", ftConfig.minOrderLevel[1], ftConfigCopy.minOrderLevel)
 			end
-			dbPrintf("    - " .. msg)
+			dbPrint("    - " .. msg)
 			table.insert(ftConfigCopy.msg, msg)
 		end
 
@@ -823,7 +788,7 @@ function VIPOrderManager:GetFillTypeConfig(possibleFT)
 			else
 				msg = string.format("Increased 'Probability' as animal husbandry is owned: %s%% --> %s%%", ftConfig.probability[1], ftConfigCopy.probability)
 			end
-			dbPrintf("    - " .. msg)
+			dbPrint("    - " .. msg)
 			table.insert(ftConfigCopy.msg, msg)
 		end
 	end
@@ -840,7 +805,7 @@ function VIPOrderManager:GetFillTypeConfig(possibleFT)
 			else
 				msg = string.format("Reduced 'Min. Level' as production is  owned: %s --> %s", ftConfig.minOrderLevel[1], ftConfigCopy.minOrderLevel)
 			end
-			dbPrintf("    - " .. msg)
+			dbPrint("    - " .. msg)
 			table.insert(ftConfigCopy.msg, msg)
 		end
 
@@ -852,7 +817,7 @@ function VIPOrderManager:GetFillTypeConfig(possibleFT)
 			else
 				msg = string.format("Increased 'Probability' as production is owned: %s%% --> %s%%", ftConfig.probability[1], ftConfigCopy.probability)
 			end
-			dbPrintf("    - " .. msg)
+			dbPrint("    - " .. msg)
 			table.insert(ftConfigCopy.msg, msg)
 		end
 	end
@@ -864,14 +829,14 @@ function VIPOrderManager:GetFillTypeConfig(possibleFT)
 		if ftConfig.quantityCorrectionFactorMaizePlus ~= nil then
 			ftConfigCopy.quantityCorrectionFactor = ftConfig.quantityCorrectionFactorMaizePlus
 			local msg = string.format("Overwritten 'Corr. Quantity' as MOD MaizePlus/TerraLifePlus is in use: %s --> %s", ftConfig.quantityCorrectionFactor, ftConfigCopy.quantityCorrectionFactor)
-			dbPrintf("    - " .. msg)
+			dbPrint("    - " .. msg)
 			table.insert(ftConfigCopy.msg, msg)
 		end
 
 		if ftConfig.probabilityMaizePlus ~= nil then
 			local msg = string.format("Overwritten 'Probability' as MOD MaizePlus/TerraLifePlus is in use: %s%% --> %s%%", ftConfigCopy.probability, ftConfig.probabilityMaizePlus)
 			ftConfigCopy.probability = ftConfig.probabilityMaizePlus
-			dbPrintf("    - " .. msg)
+			dbPrint("    - " .. msg)
 			table.insert(ftConfigCopy.msg, msg)
 		end
 	end
@@ -1225,7 +1190,7 @@ end
 function VIPOrderManager:MakePayout(orderEntries)
     dbPrintHeader("VIPOrderManager:MakePayout()")
 
-	playSample(VIPOrderManager.successSound ,1 ,1 ,1 ,0 ,0)
+	playSample(VIPOrderManager.uiSuccessSound ,1 ,1 ,1 ,0 ,0)
 	
 	-- show message
 	g_currentMission:addIngameNotification(FSBaseMission.INGAME_NOTIFICATION_OK, g_i18n:getText("VIPOrderManager_OrderCompleted"))

@@ -1,6 +1,6 @@
 <modDesc descVersion="103">
 	<author>Fetty42</author>
-	<version>1.0.0.0</version>
+	<version>1.1.0.0</version>
 	<title>
 		<en>VIP Order Manager</en>
 		<de>VIP-Auftragsmanager</de>
@@ -247,6 +247,13 @@ Update 1.1.0:
 			<it>%s "%s" consegnate per l'ordine VIP in corso</it>
 			<ru>%s "%s" доставленных для текущего VIP-заказа</ru>
 		</text>		
+		<text name="VIPOrderManager_AnimalsSalesNotPossible">
+			<de>%s - Der Verkauf der Tiere ist momentan nicht möglich, weil die Gesundheit kleiner 75%% ist.</de>	
+			<en>%s - The sale of animals is currently not possible because their health is below 75%%.</en>
+			<fr>%s - La vente d'animaux n'est actuellement pas possible car leur santé est inférieure à 75%%.</fr>	
+			<it>%s - La vendita di animali non è attualmente possibile perché la loro salute è inferiore al 75%%.</it>
+			<ru>%s - Продажа животных в настоящее время невозможна, потому что их здоровье ниже 75%%.</ru>
+		</text>
 
 	<!-- Neuer Dlg -->
         <text name="ui_orderDlg_title">
