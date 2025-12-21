@@ -1,6 +1,6 @@
-<modDesc descVersion="103">
+<modDesc descVersion="105">
 	<author>Fetty42</author>
-	<version>1.1.0.0</version>
+	<version>1.2.0.0</version>
 	<title>
 		<en>VIP Order Manager</en>
 		<de>VIP-Auftragsmanager</de>
@@ -23,6 +23,9 @@ Bereits mit dem LS19 hatte ich angefangen den VIP-Auftragsmanager zu entwickeln,
 in dem mir vorgegeben wird, was ich anbauen muss.
 
 Multiplayer wird derzeit nicht unterstützt. 
+
+Update 1.2.0:
+- Behoben, dass bei Lieferungen teilweise die Mengen doppelt gezählt wurden
 
 Update 1.1.0:
 - Probleme mit FillType Convertern in Produktionen behoben (z.B. BGA)
@@ -49,6 +52,9 @@ by telling me what I have to grow.
 
 Multiplayer is currently not supported. 
 
+Update 1.2.0:
+- Fixed that in deliveries sometimes the quantities were counted twice
+
 Update 1.1.0:
 - Fixed issues with FillType converters in productions (e.g. BGA)
 - Fixed compatibility issues with the "Animal Package Vanilla Edition"
@@ -73,6 +79,9 @@ Avec LS19, j'avais déjà commencé à développer le VIP Order Manager pour rep
 en me donnant des indications sur ce que je dois cultiver.
 
 Je n'ai pas testé la compatibilité multijoueur.
+
+Update 1.2.0:
+- Correction du fait que dans les livraisons, les quantités étaient parfois comptées deux fois
 
 Update 1.1.0:
 - Problèmes avec les convertisseurs FillType dans les productions corrigés (par ex. BGA)
@@ -99,6 +108,9 @@ dicendomi cosa devo coltivare.
 
 Le multijoueur n'est pas pris en charge pour le moment. 
 
+Update 1.2.0:
+- Risolto il problema per cui nelle consegne le quantità venivano conteggiate due volte
+
 Update 1.1.0:
 - Risolti problemi con i convertitori FillType nelle produzioni (es. BGA)
 - Risolti problemi di compatibilità con il "Pacchetto Animali Vanilla Edition"
@@ -122,6 +134,9 @@ Per eventuali messaggi di errore o suggerimenti, visitare: https://github.com/Fe
 Уже с FS19 я начал разрабатывать менеджера VIP-заказов, чтобы представлять что-то вроде кампаний. Я хотел сделать игру немного более интересной, намекая мне, что я должен расти.
 
 Многопользовательская игра в настоящее время не поддерживается. 
+
+Update 1.2.0:
+- Исправлено, что при доставках иногда количество учитывалось дважды
 
 Update 1.1.0:
 - Исправлены проблемы с конвертерами FillType в производствах (например, BGA)

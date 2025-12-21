@@ -98,7 +98,7 @@ function VIPOrderManager:loadMap(name)
 		FSBaseMission.onFinishedLoading = Utils.appendedFunction(FSBaseMission.onFinishedLoading, VIPOrderManager.loadSettings);
 		--VIPOrderManager:loadSettings();
 
-		SellingStation.addFillLevelFromTool = Utils.overwrittenFunction(SellingStation.addFillLevelFromTool, VIPOrderManager.sellingStation_addFillLevelFromTool)
+		-- SellingStation.addFillLevelFromTool = Utils.overwrittenFunction(SellingStation.addFillLevelFromTool, VIPOrderManager.sellingStation_addFillLevelFromTool)
 		UnloadTrigger.addFillUnitFillLevel = Utils.overwrittenFunction(UnloadTrigger.addFillUnitFillLevel, VIPOrderManager.unloadTrigger_addFillUnitFillLevel)
 
 		g_messageCenter:subscribe(MessageType.HOUR_CHANGED, self.onHourChanged, self)
@@ -940,11 +940,11 @@ function VIPOrderManager:addAllSellableFillTypes(possibleFillTypes)
 	for _, station in pairs(g_currentMission.storageSystem.unloadingStations) do
 		local placeable = station.owningPlaceable
         local production = placeable.spec_productionPoint
-		dbPrintf("Station: getName=%s | typeName=%s | categoryName=%s | isSellingPoint=%s | uniqueId=%s | placeable.ownerFarmId=%s | g_currentMission:getFarmId()=%s",
-			placeable:getName(), tostring(placeable.typeName), tostring(placeable.storeItem.categoryName), tostring(station.isSellingPoint), placeable.uniqueId, placeable.ownerFarmId, g_currentMission:getFarmId())
+		dbPrintf("Station: getName=%s | typeName=%s | categoryName=%s | isSellingPoint=%s | allowMissions=%s | uniqueId=%s | placeable.ownerFarmId=%s | g_currentMission:getFarmId()=%s",
+			placeable:getName(), tostring(placeable.typeName), tostring(placeable.storeItem.categoryName), tostring(station.isSellingPoint), tostring(station.allowMissions), placeable.uniqueId, placeable.ownerFarmId, g_currentMission:getFarmId())
 		-- PRODUCTIONPOINTS, SILOS, ANIMALPENS
 
-		if station.isSellingPoint ~= nil and station.isSellingPoint == true and (VIPOrderManager.acceptOwnPlaceableProductionPointsAsSellingStation or placeable.ownerFarmId ~= g_currentMission:getFarmId()) then
+		if station.isSellingPoint ~= nil and station.isSellingPoint == true and placeable.ownerFarmId ~= AccessHandler.NOBODY and (VIPOrderManager.acceptOwnPlaceableProductionPointsAsSellingStation or placeable.ownerFarmId ~= g_currentMission:getFarmId()) then
 			for fillTypeIndex, isAccepted in pairs(station.acceptedFillTypes) do
 				local fillType = g_fillTypeManager:getFillTypeByIndex(fillTypeIndex)
 
@@ -994,7 +994,7 @@ function VIPOrderManager:addAllSellableFillTypes(possibleFillTypes)
 				end
 			end
 		else
-			dbPrintf("  - Station not relevant: Name=%s | isSellingPoint=%s | placeable.ownerFarmId=%s", placeable:getName(), station.isSellingPoint, placeable.ownerFarmId)
+			dbPrintf("  - Station not relevant: Name=%s | isSellingPoint=%s | allowMissions=%s | placeable.ownerFarmId=%s", placeable:getName(), station.isSellingPoint, station.allowMissions, placeable.ownerFarmId)
 		end
 	end
 	return possibleFillTypes
@@ -1443,34 +1443,34 @@ end
 
 
 -- Observe "SellingStation.addFillLevelFromTool" when products are sold at points of sale
-function VIPOrderManager.sellingStation_addFillLevelFromTool(station, superFunc, farmId, deltaFillLevel, fillType, fillInfo, toolType)
-    dbPrintHeader("VIPOrderManager:sellingStation_addFillLevelFromTool()")
+-- function VIPOrderManager.sellingStation_addFillLevelFromTool(station, superFunc, farmId, deltaFillLevel, fillType, fillInfo, toolType)
+--     dbPrintHeader("VIPOrderManager:sellingStation_addFillLevelFromTool()")
 
-	local moved = 0
-	moved = superFunc(station, farmId, deltaFillLevel, fillType, fillInfo, toolType)
+-- 	local moved = 0
+-- 	moved = superFunc(station, farmId, deltaFillLevel, fillType, fillInfo, toolType)
 
-	local ft = g_fillTypeManager:getFillTypeByIndex(fillType)
-	local stationCategoryName = ""
-	if station.owningPlaceable ~= nil and station.owningPlaceable.storeItem ~= nil then
-		stationCategoryName = station.owningPlaceable.storeItem.categoryName
-	end
-	-- dbPrintf("  stationCategoryName=%s | moved=%s | deltaFillLevel=%s | ftName=%s (%s) | ftIndex=%s | toolType=%s", tostring(stationCategoryName), tostring(moved), tostring(deltaFillLevel), ft.name, ft.title, tostring(fillType), tostring(toolType))
+-- 	local ft = g_fillTypeManager:getFillTypeByIndex(fillType)
+-- 	local stationCategoryName = ""
+-- 	if station.owningPlaceable ~= nil and station.owningPlaceable.storeItem ~= nil then
+-- 		stationCategoryName = station.owningPlaceable.storeItem.categoryName
+-- 	end
+-- 	-- dbPrintf("  stationCategoryName=%s | moved=%s | deltaFillLevel=%s | ftName=%s (%s) | ftIndex=%s | toolType=%s", tostring(stationCategoryName), tostring(moved), tostring(deltaFillLevel), ft.name, ft.title, tostring(fillType), tostring(toolType))
 
-	if moved > 0 and VIPOrderManager.VIPOrders ~= nil and VIPOrderManager.VIPOrders[1] ~= nil then
-        local orderEntry = VIPOrderManager.VIPOrders[1].entries[ft.name]
-        -- dbPrintf("  Anzahl Order Items=%s", TyTools:getCountElements(VIPOrderManager.currentVIPOrder))
-		if orderEntry ~= nil then
-			if orderEntry.targetStation == nil or orderEntry.targetStation == station then
-				orderEntry.fillLevel = math.min(orderEntry.fillLevel + moved, orderEntry.quantity)
-				VIPOrderManager.showVIPOrder = 1;
-				VIPOrderManager.infoDisplayPastTime = 0
-				VIPOrderManager:UpdateOutputLines()
-			end
-		end
-	end
+-- 	if moved > 0 and VIPOrderManager.VIPOrders ~= nil and VIPOrderManager.VIPOrders[1] ~= nil then
+--         local orderEntry = VIPOrderManager.VIPOrders[1].entries[ft.name]
+--         -- dbPrintf("  Anzahl Order Items=%s", TyTools:getCountElements(VIPOrderManager.currentVIPOrder))
+-- 		if orderEntry ~= nil then
+-- 			if orderEntry.targetStation == nil or orderEntry.targetStation == station then
+-- 				orderEntry.fillLevel = math.min(orderEntry.fillLevel + moved, orderEntry.quantity)
+-- 				VIPOrderManager.showVIPOrder = 1;
+-- 				VIPOrderManager.infoDisplayPastTime = 0
+-- 				VIPOrderManager:UpdateOutputLines()
+-- 			end
+-- 		end
+-- 	end
 
-    return moved
-end
+--     return moved
+-- end
 
 ---Increase fill level
 -- @param integer fillUnitIndex
