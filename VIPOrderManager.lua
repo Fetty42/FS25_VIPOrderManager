@@ -73,6 +73,7 @@ VIPOrderManager.outputLines 		= {}	-- Output lines for the draw() function (text
 VIPOrderManager.infoOverlayBackground = g_currentModDirectory.."OverlayBackground.dds"
 VIPOrderManager.infoOverlay			= nil	-- Overlay for the info display
 VIPOrderManager.OrderDlg			= nil
+VIPOrderManager.isUnloadTriggerBeforeCalled = false		-- Verhindern, dass beim Aufruf von UnloadTrigger.addFillUnitFillLevel auch noch der folgende Aufruf von SellingStation.addFillLevelFromTool die Liefermenge zählt
 
 VIPOrderManager.uiSuccessSound = createSample("uiSuccess")
 loadSample(VIPOrderManager.uiSuccessSound, "data/sounds/ui/uiSuccess.ogg", false)
@@ -98,7 +99,7 @@ function VIPOrderManager:loadMap(name)
 		FSBaseMission.onFinishedLoading = Utils.appendedFunction(FSBaseMission.onFinishedLoading, VIPOrderManager.loadSettings);
 		--VIPOrderManager:loadSettings();
 
-		-- SellingStation.addFillLevelFromTool = Utils.overwrittenFunction(SellingStation.addFillLevelFromTool, VIPOrderManager.sellingStation_addFillLevelFromTool)
+		SellingStation.addFillLevelFromTool = Utils.overwrittenFunction(SellingStation.addFillLevelFromTool, VIPOrderManager.sellingStation_addFillLevelFromTool)
 		UnloadTrigger.addFillUnitFillLevel = Utils.overwrittenFunction(UnloadTrigger.addFillUnitFillLevel, VIPOrderManager.unloadTrigger_addFillUnitFillLevel)
 
 		g_messageCenter:subscribe(MessageType.HOUR_CHANGED, self.onHourChanged, self)
@@ -1442,51 +1443,48 @@ function VIPOrderManager:GetAnimalTitleByFillTypeIdx(fillTypeIdx, neededAgeInMon
 end
 
 
--- Observe "SellingStation.addFillLevelFromTool" when products are sold at points of sale
--- function VIPOrderManager.sellingStation_addFillLevelFromTool(station, superFunc, farmId, deltaFillLevel, fillType, fillInfo, toolType)
---     dbPrintHeader("VIPOrderManager:sellingStation_addFillLevelFromTool()")
+-- Observe "SellingStation.addFillLevelFromTool" when products are sold at points of sale (Nicht zählen, wenn vorher die unloadTrigger_addFillUnitFillLevel() aufgerufen wurde)
+function VIPOrderManager.sellingStation_addFillLevelFromTool(station, superFunc, farmId, deltaFillLevel, fillType, fillInfo, toolType)
+    dbPrintHeader("VIPOrderManager:sellingStation_addFillLevelFromTool()")
 
--- 	local moved = 0
--- 	moved = superFunc(station, farmId, deltaFillLevel, fillType, fillInfo, toolType)
+	local moved = 0
+	moved = superFunc(station, farmId, deltaFillLevel, fillType, fillInfo, toolType)
 
--- 	local ft = g_fillTypeManager:getFillTypeByIndex(fillType)
--- 	local stationCategoryName = ""
--- 	if station.owningPlaceable ~= nil and station.owningPlaceable.storeItem ~= nil then
--- 		stationCategoryName = station.owningPlaceable.storeItem.categoryName
--- 	end
--- 	-- dbPrintf("  stationCategoryName=%s | moved=%s | deltaFillLevel=%s | ftName=%s (%s) | ftIndex=%s | toolType=%s", tostring(stationCategoryName), tostring(moved), tostring(deltaFillLevel), ft.name, ft.title, tostring(fillType), tostring(toolType))
+	if not VIPOrderManager.isUnloadTriggerBeforeCalled then
+		local ft = g_fillTypeManager:getFillTypeByIndex(fillType)
+		local stationCategoryName = ""
+		if station.owningPlaceable ~= nil and station.owningPlaceable.storeItem ~= nil then
+			stationCategoryName = station.owningPlaceable.storeItem.categoryName
+		end
+		-- dbPrintf("  stationCategoryName=%s | moved=%s | deltaFillLevel=%s | ftName=%s (%s) | ftIndex=%s | toolType=%s", tostring(stationCategoryName), tostring(moved), tostring(deltaFillLevel), ft.name, ft.title, tostring(fillType), tostring(toolType))
 
--- 	if moved > 0 and VIPOrderManager.VIPOrders ~= nil and VIPOrderManager.VIPOrders[1] ~= nil then
---         local orderEntry = VIPOrderManager.VIPOrders[1].entries[ft.name]
---         -- dbPrintf("  Anzahl Order Items=%s", TyTools:getCountElements(VIPOrderManager.currentVIPOrder))
--- 		if orderEntry ~= nil then
--- 			if orderEntry.targetStation == nil or orderEntry.targetStation == station then
--- 				orderEntry.fillLevel = math.min(orderEntry.fillLevel + moved, orderEntry.quantity)
--- 				VIPOrderManager.showVIPOrder = 1;
--- 				VIPOrderManager.infoDisplayPastTime = 0
--- 				VIPOrderManager:UpdateOutputLines()
--- 			end
--- 		end
--- 	end
+		if moved > 0 and VIPOrderManager.VIPOrders ~= nil and VIPOrderManager.VIPOrders[1] ~= nil then
+			local orderEntry = VIPOrderManager.VIPOrders[1].entries[ft.name]
+			-- dbPrintf("  Anzahl Order Items=%s", TyTools:getCountElements(VIPOrderManager.currentVIPOrder))
+			if orderEntry ~= nil then
+				if orderEntry.targetStation == nil or orderEntry.targetStation == station then
+					orderEntry.fillLevel = math.min(orderEntry.fillLevel + moved, orderEntry.quantity)
+					VIPOrderManager.showVIPOrder = 1;
+					VIPOrderManager.infoDisplayPastTime = 0
+					VIPOrderManager:UpdateOutputLines()
+				end
+			end
+		end
+	else
+		-- dbPrintf("  Skip processing because called from unloadTrigger_addFillUnitFillLevel()")
+	end
 
---     return moved
--- end
+    return moved
+end
 
----Increase fill level
--- @param integer fillUnitIndex
--- @param float fillLevelDelta
--- @param integer fillTypeIndex
--- @param table toolType
--- @param table fillPositionData
--- @return float addedAmount
+---Increase fill level (Berücksichtigung des original Filltypes udn nicht des konvertierten Filltypes)
 function VIPOrderManager.unloadTrigger_addFillUnitFillLevel(station, superFunc, farmId, fillUnitIndex, fillLevelDelta, fillTypeIndex, toolType, fillPositionData, extraAttributes)
     dbPrintHeader("VIPOrderManager:unloadTrigger_addFillUnitFillLevel()")
 
+	VIPOrderManager.isUnloadTriggerBeforeCalled = true
 	local applied = 0
 	applied = superFunc(station, farmId, fillUnitIndex, fillLevelDelta, fillTypeIndex, toolType, fillPositionData, extraAttributes)
-    -- local applied = self.target:addFillLevelFromTool(farmId, fillLevelDelta, fillTypeIndex, fillPositionData, toolType, extraAttributes or self.extraAttributes)
-	
-	-- Own code
+
 	local ft = g_fillTypeManager:getFillTypeByIndex(fillTypeIndex)
 	local stationCategoryName = ""
 	if station.target.owningPlaceable ~= nil and station.target.owningPlaceable.storeItem ~= nil then
@@ -1506,7 +1504,8 @@ function VIPOrderManager.unloadTrigger_addFillUnitFillLevel(station, superFunc, 
 			end
 		end
 	end
--- end own code
+
+	VIPOrderManager.isUnloadTriggerBeforeCalled = false
 
     return applied
 end
