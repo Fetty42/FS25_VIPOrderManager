@@ -92,10 +92,11 @@ source(VIPOrderManager.dir .. "gui/OrderFrame.lua")
 
 function VIPOrderManager:loadMap(name)
     dbPrintHeader("VIPOrderManager:loadMap()")
-	
+
+	FSCareerMissionInfo.saveToXMLFile = Utils.appendedFunction(FSCareerMissionInfo.saveToXMLFile, VIPOrderManager.saveSettings)
+
 	if g_currentMission:getIsClient() then
 
-		FSBaseMission.saveSavegame = Utils.appendedFunction(FSBaseMission.saveSavegame, VIPOrderManager.saveSettings);
 		FSBaseMission.onFinishedLoading = Utils.appendedFunction(FSBaseMission.onFinishedLoading, VIPOrderManager.loadSettings);
 		--VIPOrderManager:loadSettings();
 
